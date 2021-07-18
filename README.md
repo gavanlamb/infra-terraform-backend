@@ -1,1 +1,3 @@
-# expensely-terraform-infrastructure
+# Terraform Backend Infrastructure
+
+This repository is for infrastructure relating to Terraform backend
