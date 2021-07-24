@@ -14,6 +14,7 @@ variable "dynamodb_name" {
 locals {
   default_tags = {
     Application = "Expensely"
-    Team        = "Expensely"
+    Team = "Expensely"
+    ManagedBy = "Terraform"
   }
 }
