@@ -10,6 +10,12 @@ variable "bucket_name" {
 variable "dynamodb_name" {
   type = string
 }
+variable "username" {
+  type = string
+}
+variable "iam_path" {
+  type = string
+}
 
 locals {
   default_tags = {

@@ -2,3 +2,5 @@
 region="ap-southeast-2"
 bucket_name="expensely-terraform-production-ap-southeast-2"
 dynamodb_name="expensely-terraform-lock-production-ap-southeast-2"
+username="terraform-ap-southeast-2"
+iam_path="terraform/ap-southeast-2"
