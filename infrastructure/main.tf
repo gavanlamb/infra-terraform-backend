@@ -4,6 +4,7 @@
   name = "Terraform Backend"
   iam_path = var.iam_path
   username = var.username
+  policy_name = var.username
   user_tags = local.default_tags
   bucket_name = var.bucket_name
   bucket_tags = local.default_tags
