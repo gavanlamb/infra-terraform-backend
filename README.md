@@ -41,7 +41,7 @@ resources:
       endpoint: expensely
       
 steps:
-  - template: ./terraform/apply.yml@terraform-templates
+  - template: ./pipelines/aws/templates/tasks/apply.yml@terraform-templates
 ```
 
 
@@ -54,6 +54,8 @@ This template will:
 3. Select the relevant workspace
 4. Destroy the infrastructure
 5. Delete the workspace
+
+The [destroy](./pipelines/templates/tasks/destroy.yml) template is a [step](https://docs.microsoft.com/en-us/azure/devops/pipelines/process/templates?view=azure-devops#step-reuse) template meaning it needs to be nested under a `steps:` block.
 
 ##### Parameters
 | Name                         | Description                                              | Type   | Default                                    | Default                                               |
@@ -68,11 +70,9 @@ This template will:
 | workingDirectory             | Directory where Terraform files are located              | string | `$(Build.SourcesDirectory)/infrastructure` |                                                       |
 | workspaceName                | Terraform workspace                                      | string |                                            |                                                       |
 
-
-
 ##### Example
 ```yaml
-- template: ./terraform/destroy.yml@templates
+- template: ./pipelines/aws/templates/tasks/destroy.yml@templates
   parameters:
     workspaceName: time-preview-23
 ```
