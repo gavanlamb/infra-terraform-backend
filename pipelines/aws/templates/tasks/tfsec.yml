@@ -1,0 +1,35 @@
+parameters:
+  - name: commandOptions
+    displayName: Command options
+    type: string
+  - name: version
+    displayName: Terraform Static code Analyzer version to download and install
+    type: string
+    default: 1.26.0
+  - name: workingDirectory
+    displayName: Directory where Terraform files are located
+    type: string
+    default: $(Build.SourcesDirectory)/infrastructure
+
+steps:
+  - task: terraformstaticcodeanalyzer@1
+    displayName: Install tfsec
+    inputs:
+      tfsecversion: ${{ parameters.version }}
+
+  - task: PowerShell@2
+    displayName: Run tfsec
+    inputs:
+      targetType: inline
+      script: |
+        tfsec . ${{ parameters.commandOptions }} --format html --out tfsec-report.html
+      errorActionPreference: stop
+      showWarnings: true
+      pwsh: true
+      workingDirectory: ${{ parameters.workingDirectory }}
+  - task: JakubRumpca.azure-pipelines-html-report.PublishHtmlReport.PublishHtmlReport@1
+    displayName: Publish tfsec HTML report
+    inputs:
+      tabName: tfsec
+      reportDir: ${{ parameters.workingDirectory }}/tfsec-report.html
+

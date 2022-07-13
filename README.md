@@ -123,3 +123,46 @@ steps:
     parameters:
       breakdownAdditionalCommandOptions: --terraform-var-file variables/${{ variables.ENVIRONMENT }}.${{ variables.AWS_DEFAULT_REGION }}.tfvars
 ```
+
+##### Plan
+Create a Terraform plan.
+
+This template will:
+1. Install the specified Terraform version
+2. Initialise the Terraform
+3. Select or create the relevant workspace
+4. Plan the changes and save them to a file
+5. Archive the changes to tar.gz
+6. Publish the archive
+
+This template will install the specified Terraform version, initialise Terraform, and apply the changes described in `.tfplan` file.
+
+The [plan](./pipelines/aws/templates/tasks/plan.yml) template is a [step](https://docs.microsoft.com/en-us/azure/devops/pipelines/process/templates?view=azure-devops#step-reuse) template meaning it needs to be nested under a `steps:` block.
+
+##### Parameters
+| Name                         | Description                                                                          | Type   | Default                                    | Default                                               |
+|:-----------------------------|:-------------------------------------------------------------------------------------|:-------|:-------------------------------------------|-------------------------------------------------------|
+| awsAccessKeyId               | AWS access key id                                                                    | string | `$(AWS_ACCESS_KEY_ID)`                     | Variable group named `{{environment}}.{{AWS region}}` |
+| awsSecretKeyId               | AWS secret key id                                                                    | string | `$(AWS_SECRET_KEY_ID)`                     | Variable group named `{{environment}}.{{AWS region}}` |
+| awsDefaultRegion             | AWS default region                                                                   | string | `$(AWS_DEFAULT_REGION)`                    | Variable group named `{{environment}}.{{AWS region}}` |
+| artifactName                 | Name of the published artifact, that contains the plan file, to download and extract | string | `$(TF_ARTIFACT_NAME)`                      | Terraform variable file                               |
+| initAdditionalCommandOptions | Additional command options for Terraform init                                        | string | " "                                        |                                                       |
+| planAdditionalCommandOptions | Additional command options for the Terraform plan                                    | string | " "                                        |                                                       |
+| version                      | Terraform version to download and install                                            | string | 1.0.2                                      |                                                       |
+| workingDirectory             | Directory where Terraform files are located                                          | string | `$(Build.SourcesDirectory)/infrastructure` |                                                       |
+| workspaceName                | Terraform workspace                                                                  | string |                                            |                                                       |
+
+##### Example
+```yaml
+resources:
+  repositories:
+    - repository: terraform-templates
+      type: github
+      name: expensely/infrastructure-terraform-backend
+      endpoint: expensely
+
+steps: 
+  - template: ./pipelines/aws/templates/tasks/plan.yml@terraform-templates
+    parameters:
+      workspaceName: time-preview-23
+```
