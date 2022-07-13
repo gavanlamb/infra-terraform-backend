@@ -1,0 +1,67 @@
+parameters:
+  - name: awsAccessKeyId
+    displayName: AWS access key id
+    type: string
+    default: $(AWS_ACCESS_KEY_ID)
+  - name: awsSecretKeyId
+    displayName: AWS secret key id
+    type: string
+    default: $(AWS_SECRET_KEY_ID)
+  - name: awsDefaultRegion
+    displayName: AWS default region
+    type: string
+    default: $(AWS_DEFAULT_REGION)
+  - name: applyAdditionalCommandOptions
+    displayName: Additional command options for Terraform apply
+    type: string
+    default: " "
+  - name: artifactName
+    displayName: Name of the published artifact to download
+    type: string
+    default: $(TF_ARTIFACT_NAME)
+  - name: version
+    displayName: Terraform version to download and install
+    type: string
+    default: 1.0.2
+  - name: workingDirectory
+    displayName: Working directory
+    type: string
+    default: $(Pipeline.Workspace)
+
+steps:
+  - task: DownloadPipelineArtifact@2
+    displayName: Download artifact
+    inputs:
+      buildType: current
+      artifactName: ${{ parameters.artifactName }}
+      targetPath: ${{ parameters.workingDirectory }}
+
+  - task: ExtractFiles@1
+    displayName: Extract archive
+    inputs:
+      archiveFilePatterns: ${{ parameters.workingDirectory }}/terraform.tar.gz
+      destinationFolder: ${{ parameters.workingDirectory }}
+      cleanDestinationFolder: false
+
+  - task: TerraformInstaller@0
+    displayName: Install version:${{ parameters.version }}
+    inputs:
+      terraformVersion: ${{ parameters.version }}
+
+  - task: PowerShell@2
+    displayName: Apply
+    name: tfApply
+    timeoutInMinutes: 360
+    inputs:
+      targetType: inline
+      script: terraform apply -no-color -auto-approve -lock=true ${{ parameters.applyAdditionalCommandOptions }} plan.tfplan
+      errorActionPreference: stop
+      showWarnings: true
+      pwsh: true
+      workingDirectory: ${{ parameters.workingDirectory }}
+    env:
+      AWS_ACCESS_KEY_ID: ${{ parameters.awsAccessKeyId }}
+      AWS_SECRET_ACCESS_KEY: ${{ parameters.awsSecretKeyId }}
+      AWS_DEFAULT_REGION: ${{ parameters.awsDefaultRegion }}
+      TF_IN_AUTOMATION: 0
+      TF_INPUT: 0
