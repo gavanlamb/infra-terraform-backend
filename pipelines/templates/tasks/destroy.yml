@@ -1,0 +1,111 @@
+parameters:
+  - name: awsAccessKeyId
+    displayName: AWS access key id
+    type: string
+    default: $(AWS_ACCESS_KEY_ID)
+  - name: awsSecretKeyId
+    displayName: AWS secret key id
+    type: string
+    default: $(AWS_SECRET_KEY_ID)
+  - name: awsDefaultRegion
+    displayName: AWS default region
+    type: string
+    default: $(AWS_DEFAULT_REGION)
+  - name: destroyAdditionalArguments
+    displayName: Additional command options for Terraform destroy command
+    type: string
+    default: " "
+  - name: initAdditionalCommandOptions
+    displayName: Additional command options for Terraform init command
+    type: string
+    default: " "
+  - name: initArgs
+    displayName: Initialise arguments for Terraform
+    type: string
+    default: $(TF_CLI_ARGS_INIT)
+  - name: version
+    displayName: Terraform version to download and install
+    type: string
+    default: 1.0.2
+  - name: workingDirectory
+    displayName: Directory where Terraform files are located
+    type: string
+    default: $(Build.SourcesDirectory)/infrastructure
+  - name: workspaceName
+    displayName: Terraform workspace
+    type: string
+
+steps:
+  - task: TerraformInstaller@0
+    displayName: Install version:${{ parameters.version }}
+    name: tfInstall
+    inputs:
+      terraformVersion: ${{ parameters.version }}
+
+  - task: PowerShell@2
+    displayName: Initialise
+    inputs:
+      targetType: inline
+      script: terraform init -no-color ${{ parameters.initAdditionalCommandOptions }}
+      errorActionPreference: default
+      showWarnings: true
+      pwsh: true
+      workingDirectory: ${{ parameters.workingDirectory }}
+    env:
+      AWS_ACCESS_KEY_ID: ${{ parameters.awsAccessKeyId }}
+      AWS_SECRET_ACCESS_KEY: ${{ parameters.awsSecretKeyId }}
+      AWS_DEFAULT_REGION: ${{ parameters.awsDefaultRegion }}
+      TF_IN_AUTOMATION: 0
+      TF_INPUT: 0
+      TF_CLI_ARGS_init: ${{ parameters.initArgs }}
+
+  - task: PowerShell@2
+    displayName: Select workspace
+    inputs:
+      targetType: inline
+      script: |
+        $lowerWorkspaceName='${{ lower(parameters.workspaceName) }}'
+        terraform workspace select $lowerWorkspaceName
+      errorActionPreference: default
+      showWarnings: true
+      pwsh: true
+      workingDirectory: ${{ parameters.workingDirectory }}
+    env:
+      AWS_ACCESS_KEY_ID: ${{ parameters.awsAccessKeyId }}
+      AWS_SECRET_ACCESS_KEY: ${{ parameters.awsSecretKeyId }}
+      AWS_DEFAULT_REGION: ${{ parameters.awsDefaultRegion }}
+      TF_IN_AUTOMATION: 0
+      TF_INPUT: 0
+
+  - task: PowerShell@2
+    displayName: Destroy
+    inputs:
+      targetType: inline
+      script: terraform destroy -auto-approve -no-color ${{ parameters.destroyAdditionalArguments }}
+      errorActionPreference: default
+      showWarnings: true
+      pwsh: true
+      workingDirectory: ${{ parameters.workingDirectory }}
+    env:
+      AWS_ACCESS_KEY_ID: ${{ parameters.awsAccessKeyId }}
+      AWS_SECRET_ACCESS_KEY: ${{ parameters.awsSecretKeyId }}
+      AWS_DEFAULT_REGION: ${{ parameters.awsDefaultRegion }}
+      TF_IN_AUTOMATION: 0
+      TF_INPUT: 0
+
+  - task: PowerShell@2
+    displayName: Delete workspace
+    inputs:
+      targetType: inline
+      script: |
+        $lowerWorkspace='${{ lower(parameters.workspaceName) }}'
+        terraform workspace select default
+        terraform workspace delete $lowerWorkspace
+      errorActionPreference: default
+      showWarnings: true
+      pwsh: true
+      workingDirectory: ${{ parameters.workingDirectory }}
+    env:
+      AWS_ACCESS_KEY_ID: ${{ parameters.awsAccessKeyId }}
+      AWS_SECRET_ACCESS_KEY: ${{ parameters.awsSecretKeyId }}
+      AWS_DEFAULT_REGION: ${{ parameters.awsDefaultRegion }}

@@ -26,7 +26,7 @@ The [apply](./pipelines/templates/tasks/apply.yml) template is a [step](https://
 | awsSecretKeyId                | AWS secret key id                                | string | `$(AWS_SECRET_KEY_ID)`  | Variable group named `{{environment}}.{{AWS region}}` |
 | awsDefaultRegion              | AWS default region                               | string | `$(AWS_DEFAULT_REGION)` | Variable group named `{{environment}}.{{AWS region}}` |
 | applyAdditionalCommandOptions | Additional command options for Terraform apply   | string | " "                     |                                                       |
-| artifactName                  | Name of the published artifact to download       | string |                         |                                                       | 
+| artifactName                  | Name of the published artifact to download       | string | `$(TF_ARTIFACT_NAME)`   | Terraform variable file                               | 
 | version                       | Terraform version to download and install        | string | 1.0.2                   |                                                       |
 | workingDirectory              | Working directory                                | string | `$(Pipeline.Workspace)` |                                                       |
 
@@ -41,7 +41,38 @@ resources:
       endpoint: expensely
       
 steps:
-  - template: ./terraform/apply.yml@templates
-    parameters:
-      artifactName: preview.terraform.plan
+  - template: ./terraform/apply.yml@terraform-templates
+```
+
+
+##### Destroy
+Destroy infrastructure and delete the relevant workspace
+
+This template will:
+1. Install the specified Terraform version
+2. Initialise the Terraform
+3. Select the relevant workspace
+4. Destroy the infrastructure
+5. Delete the workspace
+
+##### Parameters
+| Name                         | Description                                              | Type   | Default                                    | Default                                               |
+|:-----------------------------|:---------------------------------------------------------|:-------|:-------------------------------------------|:------------------------------------------------------|
+| awsAccessKeyId               | AWS access key id                                        | string | `$(AWS_ACCESS_KEY_ID)`                     | Variable group named `{{environment}}.{{AWS region}}` |
+| awsSecretKeyId               | AWS secret key id                                        | string | `$(AWS_SECRET_KEY_ID)`                     | Variable group named `{{environment}}.{{AWS region}}` |
+| awsDefaultRegion             | AWS default region                                       | string | `$(AWS_DEFAULT_REGION)`                    | Variable group named `{{environment}}.{{AWS region}}` |
+| destroyAdditionalArguments   | Additional command options for Terraform destroy command | string | " "                                        |                                                       |
+| initAdditionalCommandOptions | Additional command options for Terraform init command    | string | " "                                        |                                                       |
+| initArgs                     | Initialise arguments for Terraform                       | string | `$(TF_CLI_ARGS_INIT)`                      | Terraform variable file                               |
+| version                      | Terraform version to download and install                | string | 1.0.2                                      |                                                       |
+| workingDirectory             | Directory where Terraform files are located              | string | `$(Build.SourcesDirectory)/infrastructure` |                                                       |
+| workspaceName                | Terraform workspace                                      | string |                                            |                                                       |
+
+
+
+##### Example
+```yaml
+- template: ./terraform/destroy.yml@templates
+  parameters:
+    workspaceName: time-preview-23
 ```
