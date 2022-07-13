@@ -1,0 +1,3 @@
+variables:
+  TF_ARTIFACT_NAME: terraform.production.ap-southeast-2
+  TF_CLI_ARGS_INIT: -backend-config="dynamodb_table=expensely-terraform-lock-production-ap-southeast-2" -backend-config="bucket=expensely-terraform-production-ap-southeast-2" -backend-config="region=ap-southeast-2"

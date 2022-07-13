@@ -6,6 +6,31 @@ This repository is for infrastructure relating to Terraform backend
 ## Azure DevOps
 ### Templates
 #### Variables
+Non-secret variables will be automatically added as environment variables which can be consumed without any mapping. The variables listed below are the minimum needed to use all templates.
+
+| Name               | Description                                                                                     |
+|:-------------------|:------------------------------------------------------------------------------------------------|
+| `TF_ARTIFACT_NAME` | Name of terraform artifact                                                                      |
+| `TF_CLI_ARGS_INIT` | Arguments for Terraform init command. Generally this will include backend configuration values. |
+
+[preview.ap-southeast-2.yml](./pipelines/aws/templates/variables/preview.ap-southeast-2.yml)  
+[preview.us-east-1.yml](./pipelines/aws/templates/variables/preview.us-east-1.yml)  
+[production.ap-southeast-2.yml](./pipelines/aws/templates/variables/production.ap-southeast-2.yml)  
+[production.us-east-1.yml](./pipelines/aws/templates/variables/production.us-east-1.yml)  
+
+
+### Example
+```yaml
+resources:
+  repositories:
+    - repository: terraform-templates
+      type: github
+      name: expensely/infrastructure-terraform-backend
+      endpoint: expensely
+
+variables:
+  - template: pipelines/aws/templates/variables/production.ap-southeast-2.yml@terraform-templates
+```
 
 #### Tasks
 ##### Apply
