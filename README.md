@@ -17,7 +17,7 @@ This template will:
 3. Install the specified Terraform version
 4. Apply the Terraform changes
 
-The [apply](./pipelines/templates/tasks/apply.yml) template is a [step](https://docs.microsoft.com/en-us/azure/devops/pipelines/process/templates?view=azure-devops#step-reuse) template meaning it needs to be nested under a `steps:` block.
+The [apply](./pipelines/aws/templates/tasks/apply.yml) template is a [step](https://docs.microsoft.com/en-us/azure/devops/pipelines/process/templates?view=azure-devops#step-reuse) template meaning it needs to be nested under a `steps:` block.
 
 ###### Parameters
 | Name                          | Description                                      | Type   | Default                 | Default value found in                                |
@@ -44,7 +44,6 @@ steps:
   - template: ./pipelines/aws/templates/tasks/apply.yml@terraform-templates
 ```
 
-
 ##### Destroy
 Destroy infrastructure and delete the relevant workspace
 
@@ -55,9 +54,9 @@ This template will:
 4. Destroy the infrastructure
 5. Delete the workspace
 
-The [destroy](./pipelines/templates/tasks/destroy.yml) template is a [step](https://docs.microsoft.com/en-us/azure/devops/pipelines/process/templates?view=azure-devops#step-reuse) template meaning it needs to be nested under a `steps:` block.
+The [destroy](./pipelines/aws/templates/tasks/destroy.yml) template is a [step](https://docs.microsoft.com/en-us/azure/devops/pipelines/process/templates?view=azure-devops#step-reuse) template meaning it needs to be nested under a `steps:` block.
 
-##### Parameters
+###### Parameters
 | Name                         | Description                                              | Type   | Default                                    | Default                                               |
 |:-----------------------------|:---------------------------------------------------------|:-------|:-------------------------------------------|:------------------------------------------------------|
 | awsAccessKeyId               | AWS access key id                                        | string | `$(AWS_ACCESS_KEY_ID)`                     | Variable group named `{{environment}}.{{AWS region}}` |
@@ -70,9 +69,57 @@ The [destroy](./pipelines/templates/tasks/destroy.yml) template is a [step](http
 | workingDirectory             | Directory where Terraform files are located              | string | `$(Build.SourcesDirectory)/infrastructure` |                                                       |
 | workspaceName                | Terraform workspace                                      | string |                                            |                                                       |
 
-##### Example
+###### Example
 ```yaml
-- template: ./pipelines/aws/templates/tasks/destroy.yml@templates
-  parameters:
-    workspaceName: time-preview-23
+resources:
+  repositories:
+    - repository: terraform-templates
+      type: github
+      name: expensely/infrastructure-terraform-backend
+      endpoint: expensely
+
+steps:
+  - template: ./pipelines/aws/templates/tasks/destroy.yml@terraform-templates
+    parameters:
+      workspaceName: time-preview-23
+```
+
+##### Infracost
+Get a cost breakdown of the infrastructure
+
+This template will:
+1. Install Infracost
+2. Run Infracost Breakdown
+3. Generate HTML report
+4. Destroy the infrastructure
+5. Publish Infracost HTML report
+
+The [infracost](./pipelines/aws/templates/tasks/infracost.yml) template is a [step](https://docs.microsoft.com/en-us/azure/devops/pipelines/process/templates?view=azure-devops#step-reuse) template meaning it needs to be nested under a `steps:` block.
+
+###### Parameters
+| Name                              | Description                                                | Type   | Default                                    | Default                                               |
+|:----------------------------------|:-----------------------------------------------------------|:-------|:-------------------------------------------|:------------------------------------------------------|
+| awsAccessKeyId                    | AWS access key id                                          | string | `$(AWS_ACCESS_KEY_ID)`                     | Variable group named `{{environment}}.{{AWS region}}` |
+| awsSecretKeyId                    | AWS secret key id                                          | string | `$(AWS_SECRET_KEY_ID)`                     | Variable group named `{{environment}}.{{AWS region}}` |
+| awsDefaultRegion                  | AWS default region                                         | string | `$(AWS_DEFAULT_REGION)`                    | Variable group named `{{environment}}.{{AWS region}}` |
+| apiKey                            | Infracost api key                                          | string | `$(INFRACOST_API_KEY)`                     | Variable group named `infracost`                      |
+| version                           | Infracost version to install                               | string | `0.10.x`                                   |                                                       |
+| breakdownAdditionalCommandOptions | Additional command options for Infracost breakdown command | string | " "                                        | Terraform variable file                               |
+| enableDashboard                   | Enable Infracost dashboard                                 | string | `true`                                     |                                                       |
+| currency                          | Currency to show cost in                                   | string | `AUD`                                      |                                                       |
+| workingDirectory                  | Directory where Terraform files are located                | string | `$(Build.SourcesDirectory)/infrastructure` |                                                       |
+
+###### Example
+```yaml
+resources:
+  repositories:
+    - repository: terraform-templates
+      type: github
+      name: expensely/infrastructure-terraform-backend
+      endpoint: expensely
+
+steps:
+  - template: ./pipelines/aws/templates/tasks/infracost.yml@terraform-templates
+    parameters:
+      breakdownAdditionalCommandOptions: --terraform-var-file variables/${{ variables.ENVIRONMENT }}.${{ variables.AWS_DEFAULT_REGION }}.tfvars
 ```

@@ -1,0 +1,74 @@
+parameters:
+  - name: awsAccessKeyId
+    displayName: AWS access key id
+    type: string
+    default: $(AWS_ACCESS_KEY_ID)
+  - name: awsSecretKeyId
+    displayName: AWS secret key id
+    type: string
+    default: $(AWS_SECRET_KEY_ID)
+  - name: awsDefaultRegion
+    displayName: AWS default region
+    type: string
+    default: $(AWS_DEFAULT_REGION)
+  - name: apiKey
+    displayName: Infracost api key
+    type: string
+    default: $(INFRACOST_API_KEY)
+  - name: version
+    displayName: Infracost version to install
+    type: string
+    default: 0.10.x
+  - name: breakdownAdditionalCommandOptions
+    displayName: Additional command options for Infracost breakdown command
+    type: string
+    default: " "
+  - name: enableDashboard
+    displayName: Enable Infracost dashboard
+    type: boolean
+    default: true
+  - name: currency
+    displayName: Currency to show cost in
+    type: string
+    default: AUD
+  - name: workingDirectory
+    displayName: Directory where Terraform files are located
+    type: string
+    default: $(Build.SourcesDirectory)/infrastructure
+
+steps:
+  - task: InfracostSetup@1
+    displayName: Install Infracost
+    inputs:
+      apiKey: ${{ parameters.apiKey }}
+      version: ${{ parameters.version }}
+      currency: ${{ parameters.currency }}
+      enableDashboard: ${{ parameters.enableDashboard }}
+  - task: PowerShell@2
+    displayName: Run Infracost Breakdown
+    name: infracost_breakdown
+    inputs:
+      targetType: inline
+      script: infracost breakdown --path . --format json --out-file infracost-report.json --sync-usage-file --usage-file infracost-usage.yml ${{ parameters.breakdownAdditionalCommandOptions }}
+      errorActionPreference: stop
+      showWarnings: true
+      pwsh: true
+      workingDirectory: ${{ parameters.workingDirectory }}
+    env:
+      AWS_ACCESS_KEY_ID: ${{ parameters.awsAccessKeyId }}
+      AWS_SECRET_ACCESS_KEY: ${{ parameters.awsSecretKeyId }}
+      AWS_DEFAULT_REGION: ${{ parameters.awsDefaultRegion }}
+  - task: PowerShell@2
+    displayName: Generate HTML report
+    inputs:
+      targetType: inline
+      script: infracost output --path infracost-report.json --format html --out-file infracost-report.html
+      errorActionPreference: stop
+      showWarnings: true
+      pwsh: true
+      workingDirectory: ${{ parameters.workingDirectory }}
+  - task: JakubRumpca.azure-pipelines-html-report.PublishHtmlReport.PublishHtmlReport@1
+    displayName: Publish Infracost HTML report
+    inputs:
+      tabName: Infracost
+      reportDir: ${{ parameters.workingDirectory }}/infracost-report.html
