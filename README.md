@@ -139,7 +139,7 @@ This template will install the specified Terraform version, initialise Terraform
 
 The [plan](./pipelines/aws/templates/tasks/plan.yml) template is a [step](https://docs.microsoft.com/en-us/azure/devops/pipelines/process/templates?view=azure-devops#step-reuse) template meaning it needs to be nested under a `steps:` block.
 
-##### Parameters
+###### Parameters
 | Name                         | Description                                                                          | Type   | Default                                    | Default                                               |
 |:-----------------------------|:-------------------------------------------------------------------------------------|:-------|:-------------------------------------------|-------------------------------------------------------|
 | awsAccessKeyId               | AWS access key id                                                                    | string | `$(AWS_ACCESS_KEY_ID)`                     | Variable group named `{{environment}}.{{AWS region}}` |
@@ -152,7 +152,7 @@ The [plan](./pipelines/aws/templates/tasks/plan.yml) template is a [step](https:
 | workingDirectory             | Directory where Terraform files are located                                          | string | `$(Build.SourcesDirectory)/infrastructure` |                                                       |
 | workspaceName                | Terraform workspace                                                                  | string |                                            |                                                       |
 
-##### Example
+###### Example
 ```yaml
 resources:
   repositories:
@@ -165,4 +165,39 @@ steps:
   - template: ./pipelines/aws/templates/tasks/plan.yml@terraform-templates
     parameters:
       workspaceName: time-preview-23
+```
+
+##### Tfsec
+Static analysis of your terraform code to spot potential misconfigurations
+
+This template will:
+1. Install the specified tfsec version
+2. Run tfsec
+3. Publish HTML report
+
+The [tfsec](./pipelines/aws/templates/tasks/tfsec.yml) template is a [step](https://docs.microsoft.com/en-us/azure/devops/pipelines/process/templates?view=azure-devops#step-reuse) template meaning it needs to be nested under a `steps:` block.
+
+If you are going to use this to apply changes to infrastructure in AWS you will need to configure the credentials using the [configure](#configure) template.
+
+###### Parameters
+| Name             | Description                                                    | Type   | Default                                    |
+|:-----------------|:---------------------------------------------------------------|:-------|:-------------------------------------------|
+| version          | Terraform Static code Analyzer version to download and install | string | `0.58.6`                                   |
+| commandOptions   | Command options                                                | string |                                            |
+| workingDirectory | Directory where Terraform files are located                    | string | `$(Build.SourcesDirectory)/infrastructure` |
+
+###### Example
+```yaml
+resources:
+  repositories:
+    - repository: terraform-templates
+      type: github
+      name: expensely/infrastructure-terraform-backend
+      endpoint: expensely
+
+steps:
+  - template: ./pipelines/aws/templates/tasks/tfsec.yml@terraform-templates
+    parameters:
+      commandOptions: -var-file="variables/${{ variables.ENVIRONMENT }}.${{ variables.AWS_DEFAULT_REGION }}.tfvars"
+      workingDirectory: $(Build.SourcesDirectory)/infrastructure
 ```
