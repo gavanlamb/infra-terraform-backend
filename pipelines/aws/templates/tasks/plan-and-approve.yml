@@ -1,0 +1,156 @@
+parameters:
+  - name: awsAccessKeyId
+    displayName: AWS access key id
+    type: string
+    default: $(AWS_ACCESS_KEY_ID)
+  - name: awsSecretKeyId
+    displayName: AWS secret key id
+    type: string
+    default: $(AWS_SECRET_KEY_ID)
+  - name: awsDefaultRegion
+    displayName: AWS default region
+    type: string
+    default: $(AWS_DEFAULT_REGION)
+  - name: environment
+    displayName: Name of the environment to deploy to
+    type: string
+    default: $(ENVIRONMENT)
+  - name: infracostApiKey
+    displayName: API key for Infracost
+    type: string
+    default: $(INFRACOST_API_KEY)
+  - name: infracostBreakdownAdditionalCommandOptions
+    displayName: Additional options for Infracost breakdown command
+    type: string
+    default: " "
+  - name: infracostEnableDashboard
+    displayName: Enable Infracost dashboard
+    type: boolean
+    default: true
+  - name: infracostVersion
+    displayName: Infracost version to install
+    type: string
+    default: 0.10.x
+  - name: infracostCurrency
+    displayName: Currency to show cost in
+    type: string
+    default: AUD
+  - name: runInfracost
+    displayName: Run Infracost?
+    type: boolean
+    default: true
+  - name: runTfsec
+    displayName: Run TFSEC?
+    type: boolean
+    default: true
+  - name: runTerraformApply
+    displayName: Run Terraform Apply?
+    type: boolean
+    default: true
+  - name: terraformArtifactName
+    displayName: Name of the Terraform plan artifact
+    type: string
+    default: $(TF_ARTIFACT_NAME)
+  - name: terraformWorkspaceName
+    displayName: Name of the Terraform workspace
+    type: string
+  - name: terraformApplyAdditionalCommandOptions
+    displayName: Additional options for Terraform apply command
+    type: string
+    default: " "
+  - name: terraformInitAdditionalCommandOptions
+    displayName: Additional options for Terraform init command
+    type: string
+    default: " "
+  - name: terraformPlanAdditionalCommandOptions
+    displayName: Additional options for the Terraform plan command
+    type: string
+    default: " "
+  - name: terraformVariablesFile
+    displayName: Terraform variable file
+    type: string
+  - name: terraformVersion
+    displayName: Terraform version to install
+    type: string
+    default: 1.0.2
+  - name: tfsecCommandOptions
+    displayName: Command options
+    type: string
+    default: " "
+  - name: tfsecVersion
+    displayName: Terraform Static Code Analyzer version to download and install
+    type: string
+    default: 1.26.0
+  - name: workingDirectory
+    displayName: Directory where Terraform files are located
+    type: string
+    default: $(Build.SourcesDirectory)/infrastructure
+
+jobs:
+  - job: plan
+    displayName: Plan
+    steps:
+      - template: plan.yml
+        parameters:
+          artifactName: ${{ parameters.terraformArtifactName }}
+          awsAccessKeyId: ${{ parameters.awsAccessKeyId }}
+          awsSecretKeyId: ${{ parameters.awsSecretKeyId }}
+          awsDefaultRegion: ${{ parameters.awsDefaultRegion }}
+          initAdditionalCommandOptions: ${{ parameters.terraformInitAdditionalCommandOptions }}
+          planAdditionalCommandOptions: ${{ parameters.terraformVariablesFile }} ${{ parameters.terraformPlanAdditionalCommandOptions }}
+          version: ${{ parameters.terraformVersion }}
+          workspaceName: ${{ parameters.terraformWorkspaceName }}
+          workingDirectory: ${{ parameters.workingDirectory }}
+
+      - ${{ if eq(parameters.runInfracost, true) }}:
+        - template: infracost.yml
+          parameters:
+            apiKey: ${{ parameters.infracostApiKey }}
+            awsAccessKeyId: ${{ parameters.awsAccessKeyId }}
+            awsSecretKeyId: ${{ parameters.awsSecretKeyId }}
+            awsDefaultRegion: ${{ parameters.awsDefaultRegion }}
+            breakdownAdditionalCommandOptions: --terraform-var-file ${{ parameters.terraformVariablesFile }} ${{ parameters.infracostBreakdownAdditionalCommandOptions }}
+            currency: ${{ parameters.infracostCurrency }}
+            enableDashboard: ${{ parameters.infracostEnableDashboard }}
+            version: ${{ parameters.infracostVersion }}
+            workingDirectory: ${{ parameters.workingDirectory }}
+
+      - ${{ if eq(parameters.runTfsec, true) }}:
+        - template: tfsec.yml
+          parameters:
+            commandOptions: --tfvars-file="${{ parameters.terraformVariablesFile }}"  ${{ parameters.tfsecCommandOptions }}
+            version: ${{ parameters.tfsecVersion }}
+            workingDirectory: ${{ parameters.workingDirectory }}
+
+  - ${{ if eq(parameters.runTerraformApply, true) }}:           
+    - job: approve
+      displayName: Approve
+      dependsOn: plan
+      pool: server
+      steps:
+        - task: ManualValidation@0
+          displayName: Manual validation
+          inputs:
+            notifyUsers: '[Expensely]\Expensely Team'
+            onTimeout: reject
+            instructions: Validate the dependant job
+          timeoutInMinutes: 60
+  
+    - deployment: apply
+      displayName: Apply
+      dependsOn: approve
+      environment: ${{ parameters.environment }}
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+              - download: none
+              - template: apply.yml
+                parameters:
+                  awsAccessKeyId: ${{ parameters.awsAccessKeyId }}
+                  awsSecretKeyId: ${{ parameters.awsSecretKeyId }}
+                  awsDefaultRegion: ${{ parameters.awsDefaultRegion }}
+                  artifactName: ${{ parameters.terraformArtifactName }}
+                  applyAdditionalCommandOptions: ${{ parameters.terraformApplyAdditionalCommandOptions }}
+                  version: ${{ parameters.terraformVersion }}
+                  workingDirectory: ${{ parameters.workingDirectory }}

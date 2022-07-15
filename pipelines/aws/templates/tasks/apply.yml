@@ -30,26 +30,26 @@ parameters:
 
 steps:
   - task: DownloadPipelineArtifact@2
-    displayName: Download artifact
+    displayName: Download Terraform artifact
     inputs:
       buildType: current
       artifactName: ${{ parameters.artifactName }}
       targetPath: ${{ parameters.workingDirectory }}
 
   - task: ExtractFiles@1
-    displayName: Extract archive
+    displayName: Extract Terraform artifact
     inputs:
       archiveFilePatterns: ${{ parameters.workingDirectory }}/terraform.tar.gz
       destinationFolder: ${{ parameters.workingDirectory }}
       cleanDestinationFolder: false
 
   - task: TerraformInstaller@0
-    displayName: Install version:${{ parameters.version }}
+    displayName: Install Terraform version:${{ parameters.version }}
     inputs:
       terraformVersion: ${{ parameters.version }}
 
   - task: PowerShell@2
-    displayName: Apply
+    displayName: Terraform Apply
     name: tfApply
     timeoutInMinutes: 360
     inputs:

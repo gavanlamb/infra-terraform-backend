@@ -37,13 +37,13 @@ parameters:
 
 steps:
   - task: TerraformInstaller@0
-    displayName: Install version:${{ parameters.version }}
+    displayName: Install Terraform version:${{ parameters.version }}
     name: tfInstall
     inputs:
       terraformVersion: ${{ parameters.version }}
 
   - task: PowerShell@2
-    displayName: Initialise
+    displayName: Terraform initialise
     inputs:
       targetType: inline
       script: terraform init -no-color ${{ parameters.initAdditionalCommandOptions }}
@@ -60,7 +60,7 @@ steps:
       TF_CLI_ARGS_init: ${{ parameters.initArgs }}
 
   - task: PowerShell@2
-    displayName: Select workspace
+    displayName: Select Terraform workspace
     inputs:
       targetType: inline
       script: |
@@ -78,7 +78,7 @@ steps:
       TF_INPUT: 0
 
   - task: PowerShell@2
-    displayName: Destroy
+    displayName: Terraform destroy
     inputs:
       targetType: inline
       script: terraform destroy -auto-approve -no-color ${{ parameters.destroyAdditionalArguments }}
@@ -94,7 +94,7 @@ steps:
       TF_INPUT: 0
 
   - task: PowerShell@2
-    displayName: Delete workspace
+    displayName: Delete Terraform workspace
     inputs:
       targetType: inline
       script: |

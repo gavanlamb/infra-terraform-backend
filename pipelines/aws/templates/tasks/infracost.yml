@@ -44,6 +44,7 @@ steps:
       version: ${{ parameters.version }}
       currency: ${{ parameters.currency }}
       enableDashboard: ${{ parameters.enableDashboard }}
+
   - task: PowerShell@2
     displayName: Run Infracost Breakdown
     name: infracost_breakdown
@@ -58,8 +59,9 @@ steps:
       AWS_ACCESS_KEY_ID: ${{ parameters.awsAccessKeyId }}
       AWS_SECRET_ACCESS_KEY: ${{ parameters.awsSecretKeyId }}
       AWS_DEFAULT_REGION: ${{ parameters.awsDefaultRegion }}
+
   - task: PowerShell@2
-    displayName: Generate HTML report
+    displayName: Generate Infracost HTML report
     inputs:
       targetType: inline
       script: infracost output --path infracost-report.json --format html --out-file infracost-report.html
@@ -67,6 +69,7 @@ steps:
       showWarnings: true
       pwsh: true
       workingDirectory: ${{ parameters.workingDirectory }}
+
   - task: JakubRumpca.azure-pipelines-html-report.PublishHtmlReport.PublishHtmlReport@1
     displayName: Publish Infracost HTML report
     inputs:
