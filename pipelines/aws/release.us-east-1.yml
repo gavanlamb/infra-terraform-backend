@@ -29,5 +29,5 @@ stages:
       - template: templates/tasks/plan-and-approve.yml
         parameters:
           terraformVariablesFile: variables/$(ENVIRONMENT).$(AWS_DEFAULT_REGION).tfvars
-          terraformWorkspaceName: $(WORKSPACE_PREFIX)$(ENVIRONMENT)
+          terraformWorkspace: $(WORKSPACE_PREFIX)$(ENVIRONMENT)
           environment: $(ENVIRONMENT)

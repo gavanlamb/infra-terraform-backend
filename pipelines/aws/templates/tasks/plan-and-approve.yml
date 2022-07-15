@@ -50,7 +50,7 @@ parameters:
     displayName: Name of the Terraform plan artifact
     type: string
     default: $(TF_ARTIFACT_NAME)
-  - name: terraformWorkspaceName
+  - name: terraformWorkspace
     displayName: Name of the Terraform workspace
     type: string
   - name: terraformApplyAdditionalCommandOptions
@@ -98,7 +98,7 @@ jobs:
           initAdditionalCommandOptions: ${{ parameters.terraformInitAdditionalCommandOptions }}
           planAdditionalCommandOptions: -var-file="${{ parameters.terraformVariablesFile }}" ${{ parameters.terraformPlanAdditionalCommandOptions }}
           version: ${{ parameters.terraformVersion }}
-          workspaceName: ${{ parameters.terraformWorkspaceName }}
+          workspace: ${{ parameters.terraformWorkspace }}
           workingDirectory: ${{ parameters.workingDirectory }}
 
       - ${{ if eq(parameters.runInfracost, true) }}:
@@ -117,9 +117,10 @@ jobs:
       - ${{ if eq(parameters.runTfsec, true) }}:
         - template: tfsec.yml
           parameters:
-            commandOptions: --tfvars-file="${{ parameters.terraformVariablesFile }}"  ${{ parameters.tfsecCommandOptions }}
+            commandOptions: --var-file="${{ parameters.terraformVariablesFile }}"  ${{ parameters.tfsecCommandOptions }}
             version: ${{ parameters.tfsecVersion }}
             workingDirectory: ${{ parameters.workingDirectory }}
+            workspace: ${{ parameters.terraformWorkspace }}
 
   - ${{ if eq(parameters.runTerraformApply, true) }}:           
     - job: approve

@@ -31,7 +31,7 @@ parameters:
     displayName: Directory where Terraform files are located
     type: string
     default: $(Build.SourcesDirectory)/infrastructure
-  - name: workspaceName
+  - name: workspace
     displayName: Terraform workspace
     type: string
 
@@ -64,8 +64,8 @@ steps:
     inputs:
       targetType: inline
       script: |
-        $lowerWorkspaceName='${{ lower(parameters.workspaceName) }}'
-        terraform workspace select $lowerWorkspaceName
+        $lowerWorkspace='${{ lower(parameters.workspace) }}'
+        terraform workspace select $lowerWorkspace
       errorActionPreference: default
       showWarnings: true
       pwsh: true
@@ -98,7 +98,7 @@ steps:
     inputs:
       targetType: inline
       script: |
-        $lowerWorkspace='${{ lower(parameters.workspaceName) }}'
+        $lowerWorkspace='${{ lower(parameters.workspace) }}'
         terraform workspace select default
         terraform workspace delete $lowerWorkspace
       errorActionPreference: default

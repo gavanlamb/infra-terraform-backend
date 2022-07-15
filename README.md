@@ -90,7 +90,7 @@ The [destroy](./pipelines/aws/templates/tasks/destroy.yml) template is a [step](
 | initArgs                     | Initialise arguments for Terraform                       | string | `$(TF_CLI_ARGS_INIT)`                      | Terraform variable file                               |
 | version                      | Terraform version to download and install                | string | 1.0.2                                      |                                                       |
 | workingDirectory             | Directory where Terraform files are located              | string | `$(Build.SourcesDirectory)/infrastructure` |                                                       |
-| workspaceName                | Terraform workspace                                      | string |                                            |                                                       |
+| workspace                    | Terraform workspace                                      | string |                                            |                                                       |
 
 ###### Example
 ```yaml
@@ -104,7 +104,7 @@ resources:
 steps:
   - template: ./pipelines/aws/templates/tasks/destroy.yml@terraform-templates
     parameters:
-      workspaceName: time-preview-23
+      workspace: time-preview-23
 ```
 
 ##### Infracost
@@ -173,7 +173,7 @@ The [plan](./pipelines/aws/templates/tasks/plan.yml) template is a [step](https:
 | planAdditionalCommandOptions | Additional command options for the Terraform plan                                    | string | " "                                        |                                                       |
 | version                      | Terraform version to download and install                                            | string | 1.0.2                                      |                                                       |
 | workingDirectory             | Directory where Terraform files are located                                          | string | `$(Build.SourcesDirectory)/infrastructure` |                                                       |
-| workspaceName                | Terraform workspace                                                                  | string |                                            |                                                       |
+| workspace                    | Terraform workspace                                                                  | string |                                            |                                                       |
 
 ###### Example
 ```yaml
@@ -187,7 +187,7 @@ resources:
 steps: 
   - template: ./pipelines/aws/templates/tasks/plan.yml@terraform-templates
     parameters:
-      workspaceName: time-preview-23
+      workspace: time-preview-23
 ```
 
 ##### Tfsec
@@ -205,8 +205,9 @@ If you are going to use this to apply changes to infrastructure in AWS you will 
 ###### Parameters
 | Name             | Description                                                    | Type   | Default                                    | Default value found in |
 |:-----------------|:---------------------------------------------------------------|:-------|:-------------------------------------------|------------------------|
-| version          | Terraform Static code Analyzer version to download and install | string | `0.58.6`                                   |                        |
+| version          | Terraform Static code Analyzer version to download and install | string | `1.26.0`                                   |                        |
 | commandOptions   | Command options                                                | string |                                            |                        |
+| workspace        | Terraform workspace                                            | string |                                            |                        |
 | workingDirectory | Directory where Terraform files are located                    | string | `$(Build.SourcesDirectory)/infrastructure` |                        |
 
 ###### Example
@@ -254,7 +255,7 @@ If you are going to use this to apply changes to infrastructure in AWS you will 
 | runTfsec                                   | Run TFSEC?                                                     | boolean | `true`                                      |                                                       |
 | runTerraformApply                          | Run Terraform Apply?                                           | boolean | `true`                                      |                                                       |
 | terraformArtifactName                      | Name of the Terraform plan artifact                            | string  | `$(TF_ARTIFACT_NAME)`                       |                                                       |
-| terraformWorkspaceName                     | Name of the Terraform workspace                                | string  |                                             |                                                       |
+| terraformWorkspace                         | Name of the Terraform workspace                                | string  |                                             |                                                       |
 | terraformApplyAdditionalCommandOptions     | Additional options for Terraform apply command                 | string  | " "                                         |                                                       |
 | terraformInitAdditionalCommandOptions      | Additional options for Terraform init command                  | string  | " "                                         |                                                       |
 | terraformPlanAdditionalCommandOptions      | Additional options for the Terraform plan command              | string  | " "                                         |                                                       |
@@ -277,6 +278,6 @@ jobs:
   - template: ./pipelines/aws/templates/tasks/plan-and-approve.yml@terraform-templates
     parameters:
       terraformVariablesFile: variables/${{ variables.ENVIRONMENT }}.${{ variables.AWS_DEFAULT_REGION }}.tfvars
-      terraformWorkspaceName: time-production
+      terraformWorkspace: time-production
       environment: production
 ```

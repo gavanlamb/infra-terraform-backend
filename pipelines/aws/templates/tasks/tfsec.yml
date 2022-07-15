@@ -6,6 +6,10 @@ parameters:
     displayName: TFSEC version to download and install
     type: string
     default: 1.26.0
+  - name: workspace
+    displayName: Terraform workspace
+    type: string
+    default: 1.26.0
   - name: workingDirectory
     displayName: Directory where Terraform files are located
     type: string
@@ -19,16 +23,19 @@ steps:
 
   - task: PowerShell@2
     displayName: Run TFSEC
+    name: run_tfsec
     inputs:
       targetType: inline
       script: |
-        tfsec . ${{ parameters.commandOptions }} --format html --out tfsec-report.html --detailed-exit-code --gif
+        Write-Host "##vso[task.setvariable variable=RUN_STATUS;isOutput=true]STARTED"
+        tfsec . ${{ parameters.commandOptions }} --workspace ${{ parameters.workspace }} --format html,lovely --out tfsec-report
       errorActionPreference: stop
       showWarnings: true
       pwsh: true
       workingDirectory: ${{ parameters.workingDirectory }}
 
   - task: JakubRumpca.azure-pipelines-html-report.PublishHtmlReport.PublishHtmlReport@1
+    condition: and(succeededOrFailed(), eq(variables['run_tfsec.RUN_STATUS'], 'STARTED'))
     displayName: Publish TFSEC HTML report
     inputs:
       tabName: tfsec
