@@ -1,13 +1,12 @@
 ﻿module "backend" {
-  source = "github.com/gavanlamb/terraform-module-aws-backend"
+  source = "github.com/expensely/terraform-module-aws-backend"
   environment = var.environment
   name = "Terraform Backend"
-  iam_path = var.iam_path
-  username = var.username
-  policy_name = var.username
-  user_tags = local.default_tags
   bucket_name = var.bucket_name
-  bucket_tags = local.default_tags
   dynamodb_name = var.dynamodb_name
-  dynamodb_tags = local.default_tags
+  iam_path = var.iam_path
+  iam_policy_prefix = var.iam_policy_prefix
+  key_name = "terraform"
+  username = var.username
+  tags = local.default_tags
 }

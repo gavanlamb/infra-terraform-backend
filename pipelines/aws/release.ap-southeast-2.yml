@@ -26,8 +26,11 @@ stages:
       - group: production.ap-southeast-2
       - group: infracost
     jobs:
+      # TODO download file contents
+      # TODO Archive file content
       - template: templates/tasks/plan-and-approve.yml
         parameters:
           terraformVariablesFile: variables/$(ENVIRONMENT).$(AWS_DEFAULT_REGION).tfvars
           terraformWorkspace: $(WORKSPACE_PREFIX)$(ENVIRONMENT)
-          environment: $(ENVIRONMENT)
+          environment: ${{ variables.ENVIRONMENT }}
+      # TODO upload file contents

@@ -30,4 +30,4 @@ stages:
         parameters:
           terraformVariablesFile: variables/$(ENVIRONMENT).$(AWS_DEFAULT_REGION).tfvars
           terraformWorkspace: $(WORKSPACE_PREFIX)$(ENVIRONMENT)
-          environment: $(ENVIRONMENT)
+          environment: ${{ variables.ENVIRONMENT }}

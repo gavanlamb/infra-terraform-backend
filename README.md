@@ -50,7 +50,7 @@ The [apply](./pipelines/aws/templates/tasks/apply.yml) template is a [step](http
 | awsDefaultRegion              | AWS default region                               | string | `$(AWS_DEFAULT_REGION)` | Variable group named `{{environment}}.{{AWS region}}` |
 | applyAdditionalCommandOptions | Additional command options for Terraform apply   | string | " "                     |                                                       |
 | artifactName                  | Name of the published artifact to download       | string | `$(TF_ARTIFACT_NAME)`   | Terraform variable file                               | 
-| version                       | Terraform version to download and install        | string | 1.0.2                   |                                                       |
+| version                       | Terraform version to download and install        | string | 1.2.5                   |                                                       |
 | workingDirectory              | Working directory                                | string | `$(Pipeline.Workspace)` |                                                       |
 
 
@@ -88,7 +88,7 @@ The [destroy](./pipelines/aws/templates/tasks/destroy.yml) template is a [step](
 | destroyAdditionalArguments   | Additional command options for Terraform destroy command | string | " "                                        |                                                       |
 | initAdditionalCommandOptions | Additional command options for Terraform init command    | string | " "                                        |                                                       |
 | initArgs                     | Initialise arguments for Terraform                       | string | `$(TF_CLI_ARGS_INIT)`                      | Terraform variable file                               |
-| version                      | Terraform version to download and install                | string | 1.0.2                                      |                                                       |
+| version                      | Terraform version to download and install                | string | 1.2.5                                      |                                                       |
 | workingDirectory             | Directory where Terraform files are located              | string | `$(Build.SourcesDirectory)/infrastructure` |                                                       |
 | workspace                    | Terraform workspace                                      | string |                                            |                                                       |
 
@@ -171,7 +171,7 @@ The [plan](./pipelines/aws/templates/tasks/plan.yml) template is a [step](https:
 | artifactName                 | Name of the published artifact, that contains the plan file, to download and extract | string | `$(TF_ARTIFACT_NAME)`                      | Terraform variable file                               |
 | initAdditionalCommandOptions | Additional command options for Terraform init                                        | string | " "                                        |                                                       |
 | planAdditionalCommandOptions | Additional command options for the Terraform plan                                    | string | " "                                        |                                                       |
-| version                      | Terraform version to download and install                                            | string | 1.0.2                                      |                                                       |
+| version                      | Terraform version to download and install                                            | string | 1.2.5                                      |                                                       |
 | workingDirectory             | Directory where Terraform files are located                                          | string | `$(Build.SourcesDirectory)/infrastructure` |                                                       |
 | workspace                    | Terraform workspace                                                                  | string |                                            |                                                       |
 
@@ -260,7 +260,7 @@ If you are going to use this to apply changes to infrastructure in AWS you will 
 | terraformInitAdditionalCommandOptions      | Additional options for Terraform init command                  | string  | " "                                         |                                                       |
 | terraformPlanAdditionalCommandOptions      | Additional options for the Terraform plan command              | string  | " "                                         |                                                       |
 | terraformVariablesFile                     | Terraform variable file                                        | string  |                                             |                                                       |
-| terraformVersion                           | Terraform version to install                                   | string  | `1.0.2`                                     |                                                       |
+| terraformVersion                           | Terraform version to install                                   | string  | `1.2.5`                                     |                                                       |
 | tfsecCommandOptions                        | Command options                                                | string  | " "                                         |                                                       |
 | tfsecVersion                               | Terraform Static Code Analyzer version to download and install | string  | `1.26.0`                                    |                                                       |
 | workingDirectory                           | Directory where Terraform files are located                    | string  | `$(Build.SourcesDirectory)/infrastructure ` |                                                       |

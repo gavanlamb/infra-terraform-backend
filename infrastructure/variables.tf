@@ -16,6 +16,12 @@ variable "username" {
 variable "iam_path" {
   type = string
 }
+variable "iam_policy_prefix" {
+  type = string
+}
+variable "key_name" {
+  type = string
+}
 
 locals {
   default_tags = {

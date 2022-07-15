@@ -71,7 +71,7 @@ parameters:
   - name: terraformVersion
     displayName: Terraform version to install
     type: string
-    default: 1.0.2
+    default: 1.2.5
   - name: tfsecCommandOptions
     displayName: Command options
     type: string
@@ -139,7 +139,8 @@ jobs:
     - deployment: apply
       displayName: Apply
       dependsOn: approve
-      environment: ${{ parameters.environment }}
+      environment: 
+        name: ${{ parameters.environment }}
       strategy:
         runOnce:
           deploy:
