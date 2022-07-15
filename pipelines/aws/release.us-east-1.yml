@@ -1,10 +1,4 @@
 name: 1.0$(Rev:.r)
-resources:
-  repositories:
-    - repository: templates
-      type: github
-      name: expensely/azure-devops-templates
-      endpoint: Expensely
 
 pool:
   vmImage: ubuntu-latest
@@ -26,14 +20,14 @@ variables:
 
 stages:
   - stage: production
-    displayName: Production
-    dependsOn: []
+    displayName: Production  
     variables:
-      - template: variables/production.us-east-1.yml@templates
+      - template: templates/variables/production.us-east-1.yml
+      - group: production.us-east-1
+      - group: infracost
     jobs:
-      - template: terraform/plan-and-approve.yml@templates
+      - template: templates/tasks/plan-and-approve.yml
         parameters:
-          artifactName: ${{ variables.TF_ARTIFACT_NAME }}
-          environment: ${{ variables.ENVIRONMENT }}
-          region: ${{ variables.REGION }}
-          workspaceName: ${{ variables.WORKSPACE_PREFIX }}${{ variables.ENVIRONMENT }}
+          terraformVariablesFile: variables/$(ENVIRONMENT).$(AWS_DEFAULT_REGION).tfvars
+          terraformWorkspaceName: $(WORKSPACE_PREFIX)$(ENVIRONMENT)
+          environment: $(ENVIRONMENT)

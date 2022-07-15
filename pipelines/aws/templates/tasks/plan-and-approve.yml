@@ -14,7 +14,6 @@ parameters:
   - name: environment
     displayName: Name of the environment to deploy to
     type: string
-    default: $(ENVIRONMENT)
   - name: infracostApiKey
     displayName: API key for Infracost
     type: string
@@ -76,7 +75,7 @@ parameters:
   - name: tfsecCommandOptions
     displayName: Command options
     type: string
-    default: " "
+    default: ""
   - name: tfsecVersion
     displayName: Terraform Static Code Analyzer version to download and install
     type: string
@@ -97,7 +96,7 @@ jobs:
           awsSecretKeyId: ${{ parameters.awsSecretKeyId }}
           awsDefaultRegion: ${{ parameters.awsDefaultRegion }}
           initAdditionalCommandOptions: ${{ parameters.terraformInitAdditionalCommandOptions }}
-          planAdditionalCommandOptions: ${{ parameters.terraformVariablesFile }} ${{ parameters.terraformPlanAdditionalCommandOptions }}
+          planAdditionalCommandOptions: -var-file="${{ parameters.terraformVariablesFile }}" ${{ parameters.terraformPlanAdditionalCommandOptions }}
           version: ${{ parameters.terraformVersion }}
           workspaceName: ${{ parameters.terraformWorkspaceName }}
           workingDirectory: ${{ parameters.workingDirectory }}

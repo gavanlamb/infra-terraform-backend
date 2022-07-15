@@ -51,6 +51,9 @@ steps:
       pwsh: true
       workingDirectory: ${{ parameters.workingDirectory }}
     env:
+      AWS_ACCESS_KEY_ID: ${{ parameters.awsAccessKeyId }}
+      AWS_SECRET_ACCESS_KEY: ${{ parameters.awsSecretKeyId }}
+      AWS_DEFAULT_REGION: ${{ parameters.awsDefaultRegion }}
       TF_IN_AUTOMATION: 0
       TF_INPUT: 0
       TF_CLI_ARGS_init: $(TF_CLI_ARGS_INIT)

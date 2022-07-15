@@ -244,7 +244,7 @@ If you are going to use this to apply changes to infrastructure in AWS you will 
 | awsAccessKeyId                             | AWS access key id                                              | string  | `$(AWS_ACCESS_KEY_ID)`                      | Variable group named `{{environment}}.{{AWS region}}` |
 | awsSecretKeyId                             | AWS secret key id                                              | string  | `$(AWS_SECRET_KEY_ID)`                      | Variable group named `{{environment}}.{{AWS region}}` |
 | awsDefaultRegion                           | AWS default region                                             | string  | `$(AWS_DEFAULT_REGION)`                     | Variable group named `{{environment}}.{{AWS region}}` |
-| environment                                | Name of the environment to deploy to                           | string  | `$(ENVIRONMENT)`                            |                                                       |
+| environment                                | Name of the environment to deploy to                           | string  |                                             |                                                       |
 | infracostApiKey                            | API key for Infracost                                          | string  | `$(INFRACOST_API_KEY)`                      |                                                       |
 | infracostBreakdownAdditionalCommandOptions | Additional command options for Infracost breakdown command     | string  | " "                                         |                                                       |
 | infracostEnableDashboard                   | Enable Infracost dashboard                                     | boolean | `true`                                      |                                                       |
@@ -278,4 +278,5 @@ jobs:
     parameters:
       terraformVariablesFile: variables/${{ variables.ENVIRONMENT }}.${{ variables.AWS_DEFAULT_REGION }}.tfvars
       terraformWorkspaceName: time-production
+      environment: production
 ```

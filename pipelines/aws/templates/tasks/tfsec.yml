@@ -22,7 +22,7 @@ steps:
     inputs:
       targetType: inline
       script: |
-        tfsec . ${{ parameters.commandOptions }} --format html --out tfsec-report.html
+        tfsec . ${{ parameters.commandOptions }} --format html --out tfsec-report.html --detailed-exit-code --gif
       errorActionPreference: stop
       showWarnings: true
       pwsh: true
