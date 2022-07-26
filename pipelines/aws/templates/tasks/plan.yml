@@ -92,19 +92,19 @@ steps:
       TF_IN_AUTOMATION: 0
       TF_INPUT: 0
 
-#  - task: ArchiveFiles@2
-#    displayName: Archive Terraform infrastructure
-#    inputs:
-#      rootFolderOrFile: ${{ parameters.workingDirectory }}
-#      includeRootFolder: false
-#      archiveType: tar
-#      tarCompression: gz
-#      archiveFile: ${{ parameters.workingDirectory }}/terraform.tar.gz
-#      replaceExistingArchive: true
+  - task: ArchiveFiles@2
+    displayName: Archive Terraform infrastructure
+    inputs:
+      rootFolderOrFile: ${{ parameters.workingDirectory }}
+      includeRootFolder: false
+      archiveType: tar
+      tarCompression: gz
+      archiveFile: ${{ parameters.workingDirectory }}/terraform.tar.gz
+      replaceExistingArchive: true
 
   - task: PublishBuildArtifacts@1
     displayName: Publish Terraform artifact
     inputs:
-      PathtoPublish: ${{ parameters.workingDirectory }}/plan.tfplan
+      PathtoPublish: ${{ parameters.workingDirectory }}/terraform.tar.gz
       ArtifactName: ${{ parameters.artifactName }}
       publishLocation: Container

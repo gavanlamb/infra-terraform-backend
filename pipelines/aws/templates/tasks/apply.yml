@@ -36,12 +36,12 @@ steps:
       artifactName: ${{ parameters.artifactName }}
       targetPath: ${{ parameters.workingDirectory }}
 
-#  - task: ExtractFiles@1
-#    displayName: Extract Terraform artifact
-#    inputs:
-#      archiveFilePatterns: ${{ parameters.workingDirectory }}/terraform.tar.gz
-#      destinationFolder: ${{ parameters.workingDirectory }}
-#      cleanDestinationFolder: false
+  - task: ExtractFiles@1
+    displayName: Extract Terraform artifact
+    inputs:
+      archiveFilePatterns: ${{ parameters.workingDirectory }}/terraform.tar.gz
+      destinationFolder: ${{ parameters.workingDirectory }}
+      cleanDestinationFolder: false
 
   - task: TerraformInstaller@0
     displayName: Install Terraform version:${{ parameters.version }}
