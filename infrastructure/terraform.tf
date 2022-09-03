@@ -16,7 +16,7 @@ variable "tf_key_name" {
 
 module "backend" {
   source = "github.com/expensely/terraform-module-aws-backend"
-  environment = var.environment
+  environment = "Terraform"
   name = "Terraform Backend"
   bucket_name = var.tf_bucket_name
   dynamodb_name = var.tf_dynamodb_name
