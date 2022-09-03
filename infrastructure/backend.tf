@@ -3,12 +3,17 @@
   backend "s3" {
     key = "terraform.tfstate"
     encrypt = true
+    workspace_key_prefix = "terraform"
   }
 
   required_providers {
     aws = {
       source  = "hashicorp/aws"
       version = ">= 4.22.0"
+    }
+    azuredevops = {
+      source = "microsoft/azuredevops"
+      version = ">=0.1.0"
     }
   }
 }

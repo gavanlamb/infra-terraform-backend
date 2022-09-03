@@ -1,8 +1,0 @@
-﻿environment="Production"
-region="ap-southeast-2"
-username="terraform-ap-southeast-2"
-tf_bucket_name="expensely-terraform-state-production-ap-southeast-2"
-tf_dynamodb_name="expensely-terraform-lock-production-ap-southeast-2"
-tf_iam_path="terraform/ap-southeast-2"
-tf_iam_policy_prefix="terraform-ap-southeast-2"
-tf_key_name="terraform"

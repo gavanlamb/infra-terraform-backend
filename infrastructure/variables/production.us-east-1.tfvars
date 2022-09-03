@@ -1,8 +1,0 @@
-﻿environment="Production"
-region="us-east-1"
-username="terraform-us-east-1"
-tf_bucket_name="expensely-terraform-state-production-us-east-1"
-tf_dynamodb_name="expensely-terraform-lock-production-us-east-1"
-tf_iam_path="terraform/us-east-1"
-tf_iam_policy_prefix="terraform-us-east-1"
-tf_key_name="terraform"
