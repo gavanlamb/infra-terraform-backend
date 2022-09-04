@@ -47,11 +47,15 @@ resource "azuredevops_variable_group" "credentials" {
     name = "TF_ARTIFACT_NAME"
     value = lower(each.value.terraform_artifact_name)
   }
-  
+
   variable {
     name = "TF_CLI_ARGS_init"
-    value = each.value.profile_name == null ? 
-      "-backend-config=\"dynamodb_table=${var.tf_dynamodb_name}\" -backend-config=\"bucket=${var.tf_bucket_name}\" -backend-config=\"region=${var.region}\"" :
-      "-backend-config=\"dynamodb_table=${var.tf_dynamodb_name}\" -backend-config=\"bucket=${var.tf_bucket_name}\" -backend-config=\"region=${var.region}\" -backend-config=\"profile=${each.value.profile_name}\""
+    value = each.value.profile_name == null ? "-backend-config=\"dynamodb_table=${var.tf_dynamodb_name}\" -backend-config=\"bucket=${var.tf_bucket_name}\" -backend-config=\"region=${var.region}\"" : "-backend-config=\"dynamodb_table=${var.tf_dynamodb_name}\" -backend-config=\"bucket=${var.tf_bucket_name}\" -backend-config=\"region=${var.region}\" -backend-config=\"profile=${each.value.profile_name}\""
+  }
+
+  variable {
+    name = "INFRACOST_API_KEY"
+    secret_value = "ico-mlCr1MM6SRcRiZMObUZOTHucgtH2Lpgt"
+    is_secret = true
   }
 }

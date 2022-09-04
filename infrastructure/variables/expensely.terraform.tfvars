@@ -16,14 +16,14 @@ azure_devops_account_details=[
   {
     id = 1
     azure_devops_project_name = "Platform"
-    azure_devops_variable_group_name = "terraform"
+    azure_devops_variable_group_name = "terraform.platform.production"
     terraform_artifact_name = "terraform.platform.production"
     profile_name = "test"
   },
   {
     id = 2
     azure_devops_project_name = "Platform"
-    azure_devops_variable_group_name = "terraform"
+    azure_devops_variable_group_name = "terraform.platform.preview"
     terraform_artifact_name = "terraform.platform.preview"
     profile_name = "test"
   }

@@ -1,0 +1,27 @@
+name: 1.0$(Rev:.r)
+
+pool:
+  vmImage: ubuntu-latest
+
+trigger:
+  batch: true
+  branches:
+    include:
+      - "main"
+
+pr:
+  branches:
+    include:
+      - '*'
+
+stages:
+  - stage: terraform
+    displayName: Terraform
+    variables:
+      - group: terraform
+    jobs:
+      - template: templates/tasks/plan-and-approve.yml
+        parameters:
+          terraformVariablesFile: variables/expensely.terraform.tfvars
+          terraformWorkspace: infrastructure
+          environment: Terraform
