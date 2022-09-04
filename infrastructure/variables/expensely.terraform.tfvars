@@ -7,11 +7,13 @@ tf_iam_policy_prefix="terraform-ap-southeast-2"
 tf_key_name="terraform"
 azure_devops_account_details=[
   {
+    id = 0
     azure_devops_project_name = "Platform"
     environment = "Production"
     profile_name = "test"
   },
   {
+    id = 1
     azure_devops_project_name = "Platform"
     environment = "Preview"
     profile_name = "test"

@@ -1,7 +1,4 @@
-﻿variable "azure_devops_project_name" {
-  type = string
-}
-variable "azure_devops_org_service_url" {
+﻿variable "azure_devops_org_service_url" {
   type = string
 }
 variable "azure_devops_personal_access_token" {
@@ -9,6 +6,7 @@ variable "azure_devops_personal_access_token" {
 }
 variable "azure_devops_account_details" {
   type = list(object({
+    id = number
     azure_devops_project_name = string
     environment = string
     profile_name = string
@@ -16,13 +14,13 @@ variable "azure_devops_account_details" {
 }
 
 data "azuredevops_project" "current" {
-  for_each = var.azure_devops_account_details
+  for_each = {for adad in var.azure_devops_account_details:  adad.id => adad}
   name = each.value.azure_devops_project_name
 }
 resource "azuredevops_variable_group" "credentials" {
-  for_each = var.azure_devops_account_details
+  for_each = {for adad in var.azure_devops_account_details:  adad.id => adad}
   project_id = data.azuredevops_project.current[each.key].id
-  name = "terraform.${each.environment}"
+  name = "terraform.${lower(each.value.environment)}"
   description = "Environment variables for Terraform"
   allow_access = true
 
@@ -43,14 +41,15 @@ resource "azuredevops_variable_group" "credentials" {
     name = "TF_BACKEND_AWS_REGION"
     value = var.region
   }
+
+// TODO come up with an elegant solution for artifact names
+#  variable {
+#    name = "TF_ARTIFACT_NAME"
+#    value = "terraform.${lower(each.value.environment)}"
+#  }
   
   variable {
-    name = "TF_ARTIFACT_NAME"
-    value = "terraform.production.${tolower(var.region)}"
-  }
-  
-  variable {
-    name = "TF_CLI_ARGS_INIT"
+    name = "TF_CLI_ARGS_init"
     value = "-backend-config=\"dynamodb_table=${var.tf_dynamodb_name}\" -backend-config=\"bucket=${var.tf_bucket_name}\" -backend-config=\"region=${var.region}\" -backend-config=\"profile=${var.region}\""
   }
 }
