@@ -1,16 +1,4 @@
 parameters:
-  - name: awsAccessKeyId
-    displayName: AWS access key id
-    type: string
-    default: $(AWS_ACCESS_KEY_ID)
-  - name: awsSecretKeyId
-    displayName: AWS secret key id
-    type: string
-    default: $(AWS_SECRET_KEY_ID)
-  - name: awsDefaultRegion
-    displayName: AWS default region
-    type: string
-    default: $(AWS_DEFAULT_REGION)
   - name: applyAdditionalCommandOptions
     displayName: Additional command options for Terraform apply
     type: string
@@ -60,8 +48,5 @@ steps:
       pwsh: true
       workingDirectory: ${{ parameters.workingDirectory }}
     env:
-      AWS_ACCESS_KEY_ID: ${{ parameters.awsAccessKeyId }}
-      AWS_SECRET_ACCESS_KEY: ${{ parameters.awsSecretKeyId }}
-      AWS_DEFAULT_REGION: ${{ parameters.awsDefaultRegion }}
       TF_IN_AUTOMATION: 0
       TF_INPUT: 0

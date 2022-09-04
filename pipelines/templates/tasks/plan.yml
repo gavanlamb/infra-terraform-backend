@@ -1,16 +1,4 @@
 parameters:
-  - name: awsAccessKeyId
-    displayName: AWS access key id
-    type: string
-    default: $(AWS_ACCESS_KEY_ID)
-  - name: awsSecretKeyId
-    displayName: AWS secret key id
-    type: string
-    default: $(AWS_SECRET_KEY_ID)
-  - name: awsDefaultRegion
-    displayName: AWS default region
-    type: string
-    default: $(AWS_DEFAULT_REGION)
   - name: artifactName
     displayName: Name of the published artifact, that contains the plan file, to download and extract
     type: string
@@ -51,12 +39,8 @@ steps:
       pwsh: true
       workingDirectory: ${{ parameters.workingDirectory }}
     env:
-      AWS_ACCESS_KEY_ID: ${{ parameters.awsAccessKeyId }}
-      AWS_SECRET_ACCESS_KEY: ${{ parameters.awsSecretKeyId }}
-      AWS_DEFAULT_REGION: ${{ parameters.awsDefaultRegion }}
       TF_IN_AUTOMATION: 0
       TF_INPUT: 0
-      TF_CLI_ARGS_init: $(TF_CLI_ARGS_INIT)
 
   - task: PowerShell@2
     displayName: Select Terraform workspace
@@ -70,9 +54,6 @@ steps:
       pwsh: true
       workingDirectory: ${{ parameters.workingDirectory }}
     env:
-      AWS_ACCESS_KEY_ID: ${{ parameters.awsAccessKeyId }}
-      AWS_SECRET_ACCESS_KEY: ${{ parameters.awsSecretKeyId }}
-      AWS_DEFAULT_REGION: ${{ parameters.awsDefaultRegion }}
       TF_IN_AUTOMATION: 0
       TF_INPUT: 0
 
@@ -86,9 +67,6 @@ steps:
       pwsh: true
       workingDirectory: ${{ parameters.workingDirectory }}
     env:
-      AWS_ACCESS_KEY_ID: ${{ parameters.awsAccessKeyId }}
-      AWS_SECRET_ACCESS_KEY: ${{ parameters.awsSecretKeyId }}
-      AWS_DEFAULT_REGION: ${{ parameters.awsDefaultRegion }}
       TF_IN_AUTOMATION: 0
       TF_INPUT: 0
 

@@ -2,15 +2,15 @@ parameters:
   - name: awsAccessKeyId
     displayName: AWS access key id
     type: string
-    default: $(AWS_ACCESS_KEY_ID)
+    default: $(TF_BACKEND_AWS_KEY_ID)
   - name: awsSecretKeyId
     displayName: AWS secret key id
     type: string
-    default: $(AWS_SECRET_KEY_ID)
+    default: $(TF_BACKEND_AWS_SECRET_KEY)
   - name: awsDefaultRegion
     displayName: AWS default region
     type: string
-    default: $(AWS_DEFAULT_REGION)
+    default: $(TF_BACKEND_AWS_REGION)
   - name: environment
     displayName: Name of the environment to deploy to
     type: string
@@ -89,12 +89,15 @@ jobs:
   - job: plan
     displayName: Plan
     steps:
-      - template: plan.yml
+      - template: set-credentials.yml
         parameters:
-          artifactName: ${{ parameters.terraformArtifactName }}
           awsAccessKeyId: ${{ parameters.awsAccessKeyId }}
           awsSecretKeyId: ${{ parameters.awsSecretKeyId }}
           awsDefaultRegion: ${{ parameters.awsDefaultRegion }}
+        
+      - template: plan.yml
+        parameters:
+          artifactName: ${{ parameters.terraformArtifactName }}
           initAdditionalCommandOptions: ${{ parameters.terraformInitAdditionalCommandOptions }}
           planAdditionalCommandOptions: -var-file="${{ parameters.terraformVariablesFile }}" ${{ parameters.terraformPlanAdditionalCommandOptions }}
           version: ${{ parameters.terraformVersion }}
@@ -105,9 +108,6 @@ jobs:
         - template: infracost.yml
           parameters:
             apiKey: ${{ parameters.infracostApiKey }}
-            awsAccessKeyId: ${{ parameters.awsAccessKeyId }}
-            awsSecretKeyId: ${{ parameters.awsSecretKeyId }}
-            awsDefaultRegion: ${{ parameters.awsDefaultRegion }}
             breakdownAdditionalCommandOptions: --terraform-var-file ${{ parameters.terraformVariablesFile }} ${{ parameters.infracostBreakdownAdditionalCommandOptions }}
             currency: ${{ parameters.infracostCurrency }}
             enableDashboard: ${{ parameters.infracostEnableDashboard }}
@@ -146,11 +146,15 @@ jobs:
           deploy:
             steps:
               - download: none
-              - template: apply.yml
+
+              - template: set-credentials.yml
                 parameters:
                   awsAccessKeyId: ${{ parameters.awsAccessKeyId }}
                   awsSecretKeyId: ${{ parameters.awsSecretKeyId }}
                   awsDefaultRegion: ${{ parameters.awsDefaultRegion }}
+
+              - template: apply.yml
+                parameters:
                   artifactName: ${{ parameters.terraformArtifactName }}
                   applyAdditionalCommandOptions: ${{ parameters.terraformApplyAdditionalCommandOptions }}
                   version: ${{ parameters.terraformVersion }}
