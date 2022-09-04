@@ -89,12 +89,6 @@ jobs:
   - job: plan
     displayName: Plan
     steps:
-      - template: set-credentials.yml
-        parameters:
-          awsAccessKeyId: ${{ parameters.awsAccessKeyId }}
-          awsSecretKeyId: ${{ parameters.awsSecretKeyId }}
-          awsDefaultRegion: ${{ parameters.awsDefaultRegion }}
-        
       - template: plan.yml
         parameters:
           artifactName: ${{ parameters.terraformArtifactName }}
@@ -103,6 +97,9 @@ jobs:
           version: ${{ parameters.terraformVersion }}
           workspace: ${{ parameters.terraformWorkspace }}
           workingDirectory: ${{ parameters.workingDirectory }}
+          awsAccessKeyId: ${{ parameters.awsAccessKeyId }}
+          awsSecretKeyId: ${{ parameters.awsSecretKeyId }}
+          awsDefaultRegion: ${{ parameters.awsDefaultRegion }}
 
       - ${{ if eq(parameters.runInfracost, true) }}:
         - template: infracost.yml
@@ -113,6 +110,9 @@ jobs:
             enableDashboard: ${{ parameters.infracostEnableDashboard }}
             version: ${{ parameters.infracostVersion }}
             workingDirectory: ${{ parameters.workingDirectory }}
+            awsAccessKeyId: ${{ parameters.awsAccessKeyId }}
+            awsSecretKeyId: ${{ parameters.awsSecretKeyId }}
+            awsDefaultRegion: ${{ parameters.awsDefaultRegion }}
 
       - ${{ if eq(parameters.runTfsec, true) }}:
         - template: tfsec.yml
@@ -121,6 +121,9 @@ jobs:
             version: ${{ parameters.tfsecVersion }}
             workingDirectory: ${{ parameters.workingDirectory }}
             workspace: ${{ parameters.terraformWorkspace }}
+            awsAccessKeyId: ${{ parameters.awsAccessKeyId }}
+            awsSecretKeyId: ${{ parameters.awsSecretKeyId }}
+            awsDefaultRegion: ${{ parameters.awsDefaultRegion }}
 
   - ${{ if eq(parameters.runTerraformApply, true) }}:           
     - job: approve
@@ -146,16 +149,12 @@ jobs:
           deploy:
             steps:
               - download: none
-
-              - template: set-credentials.yml
-                parameters:
-                  awsAccessKeyId: ${{ parameters.awsAccessKeyId }}
-                  awsSecretKeyId: ${{ parameters.awsSecretKeyId }}
-                  awsDefaultRegion: ${{ parameters.awsDefaultRegion }}
-
               - template: apply.yml
                 parameters:
                   artifactName: ${{ parameters.terraformArtifactName }}
                   applyAdditionalCommandOptions: ${{ parameters.terraformApplyAdditionalCommandOptions }}
                   version: ${{ parameters.terraformVersion }}
                   workingDirectory: ${{ parameters.workingDirectory }}
+                  awsAccessKeyId: ${{ parameters.awsAccessKeyId }}
+                  awsSecretKeyId: ${{ parameters.awsSecretKeyId }}
+                  awsDefaultRegion: ${{ parameters.awsDefaultRegion }}

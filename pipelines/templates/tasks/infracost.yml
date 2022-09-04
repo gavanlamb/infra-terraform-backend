@@ -3,6 +3,18 @@ parameters:
     displayName: Infracost api key
     type: string
     default: $(INFRACOST_API_KEY)
+  - name: awsAccessKeyId
+    displayName: AWS access key id
+    type: string
+    default: $(TF_BACKEND_AWS_KEY_ID)
+  - name: awsSecretKeyId
+    displayName: AWS secret key id
+    type: string
+    default: $(TF_BACKEND_AWS_SECRET_KEY)
+  - name: awsDefaultRegion
+    displayName: AWS default region
+    type: string
+    default: $(TF_BACKEND_AWS_REGION)
   - name: version
     displayName: Infracost version to install
     type: string
@@ -43,6 +55,11 @@ steps:
       showWarnings: true
       pwsh: true
       workingDirectory: ${{ parameters.workingDirectory }}
+    env:
+      INFRACOST_API_KEY: ${{ parameters.apiKey }}
+      AWS_ACCESS_KEY_ID: ${{ parameters.awsAccessKeyId }}
+      AWS_SECRET_ACCESS_KEY: ${{ parameters.awsSecretKeyId }}
+      AWS_DEFAULT_REGION: ${{ parameters.awsDefaultRegion }}
 
   - task: PowerShell@2
     displayName: Generate Infracost HTML report

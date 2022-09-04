@@ -1,4 +1,16 @@
 parameters:
+  - name: awsAccessKeyId
+    displayName: AWS access key id
+    type: string
+    default: $(TF_BACKEND_AWS_KEY_ID)
+  - name: awsSecretKeyId
+    displayName: AWS secret key id
+    type: string
+    default: $(TF_BACKEND_AWS_SECRET_KEY)
+  - name: awsDefaultRegion
+    displayName: AWS default region
+    type: string
+    default: $(TF_BACKEND_AWS_REGION)
   - name: commandOptions
     displayName: Command options
     type: string
@@ -32,6 +44,10 @@ steps:
       showWarnings: true
       pwsh: true
       workingDirectory: ${{ parameters.workingDirectory }}
+    env:
+      AWS_ACCESS_KEY_ID: ${{ parameters.awsAccessKeyId }}
+      AWS_SECRET_ACCESS_KEY: ${{ parameters.awsSecretKeyId }}
+      AWS_DEFAULT_REGION: ${{ parameters.awsDefaultRegion }}
 
   - task: JakubRumpca.azure-pipelines-html-report.PublishHtmlReport.PublishHtmlReport@1
     condition: and(succeededOrFailed(), eq(variables['run_tfsec.RUN_STATUS'], 'STARTED'))

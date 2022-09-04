@@ -1,4 +1,16 @@
 parameters:
+  - name: awsAccessKeyId
+    displayName: AWS access key id
+    type: string
+    default: $(TF_BACKEND_AWS_KEY_ID)
+  - name: awsSecretKeyId
+    displayName: AWS secret key id
+    type: string
+    default: $(TF_BACKEND_AWS_SECRET_KEY)
+  - name: awsDefaultRegion
+    displayName: AWS default region
+    type: string
+    default: $(TF_BACKEND_AWS_REGION)
   - name: applyAdditionalCommandOptions
     displayName: Additional command options for Terraform apply
     type: string
@@ -50,3 +62,6 @@ steps:
     env:
       TF_IN_AUTOMATION: 0
       TF_INPUT: 0
+      AWS_ACCESS_KEY_ID: ${{ parameters.awsAccessKeyId }}
+      AWS_SECRET_ACCESS_KEY: ${{ parameters.awsSecretKeyId }}
+      AWS_DEFAULT_REGION: ${{ parameters.awsDefaultRegion }}

@@ -25,7 +25,6 @@ resource "azuredevops_variable_group" "credentials" {
   description = "Environment variables for Terraform"
   allow_access = true
 
-  // TODO create template to export these to ENV variables
   variable {
     name = "TF_BACKEND_AWS_KEY_ID"
     secret_value = aws_iam_access_key.cicd.id
@@ -49,7 +48,7 @@ resource "azuredevops_variable_group" "credentials" {
   }
 
   variable {
-    name = "TF_CLI_ARGS_init"
+    name = "TF_CLI_ARGS_INIT"
     value = each.value.profile_name == null ? "-backend-config=\"dynamodb_table=${var.tf_dynamodb_name}\" -backend-config=\"bucket=${var.tf_bucket_name}\" -backend-config=\"region=${var.region}\"" : "-backend-config=\"dynamodb_table=${var.tf_dynamodb_name}\" -backend-config=\"bucket=${var.tf_bucket_name}\" -backend-config=\"region=${var.region}\" -backend-config=\"profile=${each.value.profile_name}\""
   }
 
