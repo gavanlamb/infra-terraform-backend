@@ -9,13 +9,22 @@ azure_devops_account_details=[
   {
     id = 0
     azure_devops_project_name = "Platform"
-    environment = "Production"
-    profile_name = "test"
+    azure_devops_variable_group_name = "terraform"
+    terraform_artifact_name = "terraform.infrastructure"
+    profile_name = null
   },
   {
     id = 1
     azure_devops_project_name = "Platform"
-    environment = "Preview"
+    azure_devops_variable_group_name = "terraform"
+    terraform_artifact_name = "terraform.platform.production"
+    profile_name = "test"
+  },
+  {
+    id = 2
+    azure_devops_project_name = "Platform"
+    azure_devops_variable_group_name = "terraform"
+    terraform_artifact_name = "terraform.platform.preview"
     profile_name = "test"
   }
 ]
