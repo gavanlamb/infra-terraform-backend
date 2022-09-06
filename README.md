@@ -7,15 +7,13 @@ This repository is for infrastructure relating to Terraform backend
 #### Variables
 Non-secret variables will be automatically added as environment variables which can be consumed without any mapping. The variables listed below are the minimum needed to use all templates.
 
-| Name               | Description                                                                                     |
-|:-------------------|:------------------------------------------------------------------------------------------------|
-| `TF_ARTIFACT_NAME` | Name of terraform artifact                                                                      |
-| `TF_CLI_ARGS_init` | Arguments for Terraform init command. Generally this will include backend configuration values. |
-
-* [preview.ap-southeast-2.yml](./pipelines/aws/templates/variables/preview.ap-southeast-2.yml)  
-* [preview.us-east-1.yml](./pipelines/aws/templates/variables/preview.us-east-1.yml)  
-* [production.ap-southeast-2.yml](./pipelines/aws/templates/variables/production.ap-southeast-2.yml)  
-* [production.us-east-1.yml](./pipelines/aws/templates/variables/production.us-east-1.yml)  
+| Name                        | Description                |
+|:----------------------------|:---------------------------|
+| `TF_ARTIFACT_NAME`          | Name of terraform artifact |
+| `TF_BACKEND_AWS_KEY_ID`     | AWS Key ID                 |
+| `TF_BACKEND_AWS_REGION`     | AWS Region                 |
+| `TF_BACKEND_AWS_SECRET_KEY` | AWS Secret                 |
+| `TF_CLI_ARGS_INIT`          | Terraform init args        |
 
 ##### Example
 ```yaml
@@ -23,7 +21,7 @@ resources:
   repositories:
     - repository: terraform-templates
       type: github
-      name: expensely/infrastructure-terraform-backend
+      name: expensely/infra-terraform-backend
       endpoint: expensely
 
 variables:
@@ -57,7 +55,7 @@ resources:
   repositories:
     - repository: terraform-templates
       type: github
-      name: expensely/infrastructure-terraform-backend
+      name: expensely/infra-terraform-backend
       endpoint: expensely
       
 steps:
@@ -91,7 +89,7 @@ resources:
   repositories:
     - repository: terraform-templates
       type: github
-      name: expensely/infrastructure-terraform-backend
+      name: expensely/infra-terraform-backend
       endpoint: expensely
 
 steps:
@@ -128,7 +126,7 @@ resources:
   repositories:
     - repository: terraform-templates
       type: github
-      name: expensely/infrastructure-terraform-backend
+      name: expensely/infra-terraform-backend
       endpoint: expensely
 
 steps:
@@ -168,7 +166,7 @@ resources:
   repositories:
     - repository: terraform-templates
       type: github
-      name: expensely/infrastructure-terraform-backend
+      name: expensely/infra-terraform-backend
       endpoint: expensely
 
 steps: 
@@ -203,7 +201,7 @@ resources:
   repositories:
     - repository: terraform-templates
       type: github
-      name: expensely/infrastructure-terraform-backend
+      name: expensely/infra-terraform-backend
       endpoint: expensely
 
 steps:
@@ -255,7 +253,7 @@ resources:
   repositories:
     - repository: terraform-templates
       type: github
-      name: expensely/infrastructure-terraform-backend
+      name: expensely/infra-terraform-backend
       endpoint: expensely
 
 jobs:
