@@ -4,24 +4,24 @@
 variable "azure_devops_personal_access_token" {
   type = string
 }
-variable "azure_devops_account_details" {
+variable "azure_devops_projects_details" {
   type = list(object({
     id = number
-    azure_devops_project_name = string
-    azure_devops_variable_group_name = string
+    name = string
+    variable_group_name = string
     terraform_artifact_name = string
-    profile_name = string
+    aws_profile_name = string
   }))
 }
 
 data "azuredevops_project" "current" {
-  for_each = {for adad in var.azure_devops_account_details:  adad.id => adad}
-  name = each.value.azure_devops_project_name
+  for_each = {for adad in var.azure_devops_projects_details:  adad.id => adad}
+  name = each.value.name
 }
 resource "azuredevops_variable_group" "credentials" {
-  for_each = {for adad in var.azure_devops_account_details:  adad.id => adad}
+  for_each = {for adad in var.azure_devops_projects_details:  adad.id => adad}
   project_id = data.azuredevops_project.current[each.key].id
-  name = lower(each.value.azure_devops_variable_group_name)
+  name = lower(each.value.variable_group_name)
   description = "Environment variables for Terraform"
   allow_access = true
 
@@ -49,7 +49,7 @@ resource "azuredevops_variable_group" "credentials" {
 
   variable {
     name = "TF_CLI_ARGS_INIT"
-    value = each.value.profile_name == null ? "-backend-config=\"dynamodb_table=${var.tf_dynamodb_name}\" -backend-config=\"bucket=${var.tf_bucket_name}\" -backend-config=\"region=${var.region}\"" : "-backend-config=\"dynamodb_table=${var.tf_dynamodb_name}\" -backend-config=\"bucket=${var.tf_bucket_name}\" -backend-config=\"region=${var.region}\" -backend-config=\"profile=${each.value.profile_name}\""
+    value = each.value.aws_profile_name == null ? "-backend-config=\"dynamodb_table=${var.tf_dynamodb_name}\" -backend-config=\"bucket=${var.tf_bucket_name}\" -backend-config=\"region=${var.region}\"" : "-backend-config=\"dynamodb_table=${var.tf_dynamodb_name}\" -backend-config=\"bucket=${var.tf_bucket_name}\" -backend-config=\"region=${var.region}\" -backend-config=\"profile=${each.value.aws_profile_name}\""
   }
 
   variable {
