@@ -17,15 +17,8 @@ Non-secret variables will be automatically added as environment variables which 
 
 ##### Example
 ```yaml
-resources:
-  repositories:
-    - repository: terraform-templates
-      type: github
-      name: expensely/infra-terraform-backend
-      endpoint: expensely
-
 variables:
-  - template: pipelines/aws/templates/variables/production.ap-southeast-2.yml@terraform-templates
+  - group: terraform.infrastructure
 ```
 
 #### Tasks
@@ -38,7 +31,7 @@ This template will:
 3. Install the specified Terraform version
 4. Apply the Terraform changes
 
-The [apply](./pipelines/templates/tasks/apply.yml) template is a [step](https://docs.microsoft.com/en-us/azure/devops/pipelines/process/templates?view=azure-devops#step-reuse) template meaning it needs to be nested under a `steps:` block.
+The [apply](./pipelines/templates/apply.yml) template is a [step](https://docs.microsoft.com/en-us/azure/devops/pipelines/process/templates?view=azure-devops#step-reuse) template meaning it needs to be nested under a `steps:` block.
 
 ###### Parameters
 | Name                          | Description                                      | Type   | Default                 |
@@ -59,7 +52,7 @@ resources:
       endpoint: expensely
       
 steps:
-  - template: ./pipelines/templates/tasks/apply.yml@terraform-templates
+  - template: ./pipelines/templates/apply.yml@terraform-templates
 ```
 
 ##### Destroy
@@ -72,7 +65,7 @@ This template will:
 4. Destroy the infrastructure
 5. Delete the workspace
 
-The [destroy](./pipelines/templates/tasks/destroy.yml) template is a [step](https://docs.microsoft.com/en-us/azure/devops/pipelines/process/templates?view=azure-devops#step-reuse) template meaning it needs to be nested under a `steps:` block.
+The [destroy](./pipelines/templates/destroy.yml) template is a [step](https://docs.microsoft.com/en-us/azure/devops/pipelines/process/templates?view=azure-devops#step-reuse) template meaning it needs to be nested under a `steps:` block.
 
 ###### Parameters
 | Name                         | Description                                              | Type   | Default                                    |
@@ -93,7 +86,7 @@ resources:
       endpoint: expensely
 
 steps:
-  - template: ./pipelines/templates/tasks/destroy.yml@terraform-templates
+  - template: ./pipelines/templates/destroy.yml@terraform-templates
     parameters:
       workspace: time-preview-23
 ```
@@ -108,7 +101,7 @@ This template will:
 4. Destroy the infrastructure
 5. Publish Infracost HTML report
 
-The [infracost](./pipelines/templates/tasks/infracost.yml) template is a [step](https://docs.microsoft.com/en-us/azure/devops/pipelines/process/templates?view=azure-devops#step-reuse) template meaning it needs to be nested under a `steps:` block.
+The [infracost](./pipelines/templates/infracost.yml) template is a [step](https://docs.microsoft.com/en-us/azure/devops/pipelines/process/templates?view=azure-devops#step-reuse) template meaning it needs to be nested under a `steps:` block.
 
 ###### Parameters
 | Name                              | Description                                                | Type    | Default                                    | Default value found in                                |
@@ -130,7 +123,7 @@ resources:
       endpoint: expensely
 
 steps:
-  - template: ./pipelines/aws/templates/tasks/infracost.yml@terraform-templates
+  - template: ./pipelines/templates/infracost.yml@terraform-templates
     parameters:
       breakdownAdditionalCommandOptions: --terraform-var-file variables/${{ variables.ENVIRONMENT }}.${{ variables.AWS_DEFAULT_REGION }}.tfvars
 ```
@@ -148,7 +141,7 @@ This template will:
 
 This template will install the specified Terraform version, initialise Terraform, and apply the changes described in `.tfplan` file.
 
-The [plan](./pipelines/templates/tasks/plan.yml) template is a [step](https://docs.microsoft.com/en-us/azure/devops/pipelines/process/templates?view=azure-devops#step-reuse) template meaning it needs to be nested under a `steps:` block.
+The [plan](./pipelines/templates/plan.yml) template is a [step](https://docs.microsoft.com/en-us/azure/devops/pipelines/process/templates?view=azure-devops#step-reuse) template meaning it needs to be nested under a `steps:` block.
 
 ###### Parameters
 | Name                         | Description                                                                          | Type   | Default                                    |
@@ -170,7 +163,7 @@ resources:
       endpoint: expensely
 
 steps: 
-  - template: ./pipelines/aws/templates/tasks/plan.yml@terraform-templates
+  - template: ./pipelines/templates/plan.yml@terraform-templates
     parameters:
       workspace: time-preview-23
 ```
@@ -183,7 +176,7 @@ This template will:
 2. Run tfsec
 3. Publish HTML report
 
-The [tfsec](./pipelines/aws/templates/tasks/tfsec.yml) template is a [step](https://docs.microsoft.com/en-us/azure/devops/pipelines/process/templates?view=azure-devops#step-reuse) template meaning it needs to be nested under a `steps:` block.
+The [tfsec](./pipelines/templates/tfsec.yml) template is a [step](https://docs.microsoft.com/en-us/azure/devops/pipelines/process/templates?view=azure-devops#step-reuse) template meaning it needs to be nested under a `steps:` block.
 
 If you are going to use this to apply changes to infrastructure in AWS you will need to configure the credentials using the [configure](#configure) template.
 
@@ -205,7 +198,7 @@ resources:
       endpoint: expensely
 
 steps:
-  - template: ./pipelines/aws/templates/tasks/tfsec.yml@terraform-templates
+  - template: ./pipelines/templates/tfsec.yml@terraform-templates
     parameters:
       commandOptions: -var-file="variables/${{ variables.ENVIRONMENT }}.${{ variables.AWS_DEFAULT_REGION }}.tfvars"
 ```
@@ -220,7 +213,7 @@ Job:
 3. Apply  
     a. Run the [apply](#apply) template
 
-The [plan-and-approve](./pipelines/aws/templates/tasks/plan-and-approve.yml) template is a [job](https://docs.microsoft.com/en-us/azure/devops/pipelines/process/templates?view=azure-devops#job-reuse) template meaning it needs to be nested under a `jobs:` block.
+The [plan-and-approve](./pipelines/templates/plan-and-approve.yml) template is a [job](https://docs.microsoft.com/en-us/azure/devops/pipelines/process/templates?view=azure-devops#job-reuse) template meaning it needs to be nested under a `jobs:` block.
 
 If you are going to use this to apply changes to infrastructure in AWS you will need to configure the credentials using the [configure](#configure) template.
 
@@ -257,7 +250,7 @@ resources:
       endpoint: expensely
 
 jobs:
-  - template: ./pipelines/aws/templates/tasks/plan-and-approve.yml@terraform-templates
+  - template: ./pipelines/templates/plan-and-approve.yml@terraform-templates
     parameters:
       terraformVariablesFile: variables/${{ variables.ENVIRONMENT }}.${{ variables.AWS_DEFAULT_REGION }}.tfvars
       terraformWorkspace: time-production
