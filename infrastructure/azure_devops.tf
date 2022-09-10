@@ -6,35 +6,32 @@ variable "azure_devops_personal_access_token" {
 }
 variable "azure_devops_projects_details" {
   type = list(object({
-    id = number
+    project_name = string
     name = string
-    variable_group_name = string
-    terraform_artifact_name = string
-    aws_profile_name = string
     workspace_key_prefix = string
   }))
 }
 
 data "azuredevops_project" "current" {
-  for_each = {for adad in var.azure_devops_projects_details:  adad.id => adad}
-  name = each.value.name
+  for_each = {for adad in var.azure_devops_projects_details:  adad.name => adad}
+  name = each.value.project_name
 }
 resource "azuredevops_variable_group" "credentials" {
-  for_each = {for adad in var.azure_devops_projects_details:  adad.id => adad}
+  for_each = {for adad in var.azure_devops_projects_details:  adad.name => adad}
   project_id = data.azuredevops_project.current[each.key].id
-  name = lower(each.value.variable_group_name)
+  name = lower(each.value.name)
   description = "Environment variables for Terraform"
   allow_access = true
 
   variable {
     name = "TF_BACKEND_AWS_KEY_ID"
-    secret_value = aws_iam_access_key.cicd.id
+    secret_value = aws_iam_access_key.cicd[each.key].id
     is_secret = true
   }
 
   variable {
     name = "TF_BACKEND_AWS_SECRET_KEY"
-    secret_value = aws_iam_access_key.cicd.secret
+    secret_value = aws_iam_access_key.cicd[each.key].secret
     is_secret = true
   }
 
@@ -45,7 +42,7 @@ resource "azuredevops_variable_group" "credentials" {
 
   variable {
     name = "TF_ARTIFACT_NAME"
-    value = lower(each.value.terraform_artifact_name)
+    value = lower(each.value.name)
   }
 
   variable {

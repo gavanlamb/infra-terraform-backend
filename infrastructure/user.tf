@@ -1,9 +1,6 @@
-﻿variable "username" {
-  type = string
-}
-
-resource "aws_iam_user" "cicd" {
-  name = var.username
+﻿resource "aws_iam_user" "cicd" {
+  for_each = {for adad in var.azure_devops_projects_details:  adad.name => adad}
+  name = each.value.name
   path = "/cicd/"
   force_destroy = true
   tags = local.default_tags
@@ -13,7 +10,8 @@ resource "aws_iam_user" "cicd" {
   }
 }
 resource "aws_iam_access_key" "cicd" {
-  user = aws_iam_user.cicd.name
+  for_each = {for adad in var.azure_devops_projects_details:  adad.name => adad}
+  user = aws_iam_user.cicd[each.key].name 
 
   lifecycle {
     prevent_destroy = true
@@ -21,14 +19,17 @@ resource "aws_iam_access_key" "cicd" {
 }
 
 resource "aws_iam_user_policy_attachment" "cicd_remote_state" {
-  user = aws_iam_user.cicd.name
+  for_each = {for adad in var.azure_devops_projects_details:  adad.name => adad}
+  user = aws_iam_user.cicd[each.key].name
   policy_arn = module.backend.bucket_iam_policy_arn
 }
 resource "aws_iam_user_policy_attachment" "cicd_remote_lock" {
-  user = aws_iam_user.cicd.name
+  for_each = {for adad in var.azure_devops_projects_details:  adad.name => adad}
+  user = aws_iam_user.cicd[each.key].name
   policy_arn = module.backend.dynamodb_iam_policy_arn
 }
 resource "aws_iam_user_policy_attachment" "cicd_remote_state_key" {
-  user = aws_iam_user.cicd.name
+  for_each = {for adad in var.azure_devops_projects_details:  adad.name => adad}
+  user = aws_iam_user.cicd[each.key].name
   policy_arn = module.backend.kms_key_iam_policy_arn
 }

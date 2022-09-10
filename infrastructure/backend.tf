@@ -1,6 +1,10 @@
 ﻿terraform {
   required_version = ">=1.2.5"
-  backend "s3" { }
+  backend "s3" {
+    key = "terraform.tfstate"
+    encrypt = true
+    workspace_key_prefix = "terraform"
+  }
 
   required_providers {
     aws = {
