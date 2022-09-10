@@ -11,6 +11,7 @@ azure_devops_projects_details=[
     name = "Platform"
     variable_group_name = "terraform.infrastructure"
     terraform_artifact_name = "terraform.infrastructure"
+    workspace_key_prefix= "terraform"
     aws_profile_name = null
   },
   {
@@ -18,6 +19,7 @@ azure_devops_projects_details=[
     name = "Platform"
     variable_group_name = "terraform.platform.production"
     terraform_artifact_name = "terraform.platform.production"
+    workspace_key_prefix= "platform"
     aws_profile_name = "test"
   },
   {
@@ -25,6 +27,7 @@ azure_devops_projects_details=[
     name = "Platform"
     variable_group_name = "terraform.platform.preview"
     terraform_artifact_name = "terraform.platform.preview"
+    workspace_key_prefix= "platform"
     aws_profile_name = "test"
   },
   {
@@ -32,6 +35,7 @@ azure_devops_projects_details=[
     name = "Kronos"
     variable_group_name = "terraform.kronos.production"
     terraform_artifact_name = "terraform.kronos.production"
+    workspace_key_prefix= "kronos"
     aws_profile_name = "test"
   },
   {
@@ -39,6 +43,7 @@ azure_devops_projects_details=[
     name = "Kronos"
     variable_group_name = "terraform.kronos.preview"
     terraform_artifact_name = "terraform.kronos.preview"
+    workspace_key_prefix= "kronos"
     aws_profile_name = "test"
   },
   {
@@ -46,6 +51,7 @@ azure_devops_projects_details=[
     name = "Security"
     variable_group_name = "terraform.security.production"
     terraform_artifact_name = "terraform.security.production"
+    workspace_key_prefix= "security"
     aws_profile_name = "test"
   },
   {
@@ -53,6 +59,7 @@ azure_devops_projects_details=[
     name = "Security"
     variable_group_name = "terraform.security.preview"
     terraform_artifact_name = "terraform.security.preview"
+    workspace_key_prefix= "security"
     aws_profile_name = "test"
   },
   {
@@ -60,6 +67,7 @@ azure_devops_projects_details=[
     name = "Shared"
     variable_group_name = "terraform.shared.production"
     terraform_artifact_name = "terraform.shared.production"
+    workspace_key_prefix= "shared"
     aws_profile_name = "test"
   },
   {
@@ -67,6 +75,7 @@ azure_devops_projects_details=[
     name = "Shared"
     variable_group_name = "terraform.shared.preview"
     terraform_artifact_name = "terraform.shared.preview"
+    workspace_key_prefix= "shared"
     aws_profile_name = "test"
   }
 ]

@@ -11,6 +11,7 @@ variable "azure_devops_projects_details" {
     variable_group_name = string
     terraform_artifact_name = string
     aws_profile_name = string
+    workspace_key_prefix = string
   }))
 }
 
@@ -49,7 +50,7 @@ resource "azuredevops_variable_group" "credentials" {
 
   variable {
     name = "TF_CLI_ARGS_INIT"
-    value = each.value.aws_profile_name == null ? "-backend-config=\"dynamodb_table=${var.tf_dynamodb_name}\" -backend-config=\"bucket=${var.tf_bucket_name}\" -backend-config=\"region=${var.region}\"" : "-backend-config=\"dynamodb_table=${var.tf_dynamodb_name}\" -backend-config=\"bucket=${var.tf_bucket_name}\" -backend-config=\"region=${var.region}\" -backend-config=\"profile=${each.value.aws_profile_name}\""
+    value = "-backend-config=\"dynamodb_table=${var.tf_dynamodb_name}\" -backend-config=\"bucket=${var.tf_bucket_name}\" -backend-config=\"region=${var.region}\" -backend-config=\"encrypt=true\" -backend-config=\"key=terraform.tfstate\" -backend-config=\"workspace_key_prefix=${each.value.workspace_key_prefix}\""
   }
 
   variable {
