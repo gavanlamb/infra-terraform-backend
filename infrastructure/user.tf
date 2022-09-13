@@ -11,11 +11,7 @@
 }
 resource "aws_iam_access_key" "cicd" {
   for_each = {for adad in var.azure_devops_projects_details:  adad.name => adad}
-  user = aws_iam_user.cicd[each.key].name 
-
-  lifecycle {
-    prevent_destroy = true
-  }
+  user = aws_iam_user.cicd[each.key].name
 }
 
 resource "aws_iam_user_policy_attachment" "cicd_remote_state" {

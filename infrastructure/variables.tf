@@ -1,6 +1,9 @@
 ﻿variable "region" {
   type = string
 }
+variable "provider_role_arn" {
+  type = string
+}
 
 locals {
   default_tags = {
