@@ -256,3 +256,116 @@ jobs:
       terraformWorkspace: time-production
       environment: production
 ```
+
+### Permission Mapping
+#### Terraform 
+Role Arn: 
+* arn:aws:iam::931649473445:role/terraform.infrastructure
+
+Trusted users: 
+* arn:aws:iam::931649473445:user/cicd/terraform.platform.production
+
+#### User
+##### Production
+Role Arn: 
+* arn:aws:iam::266556396524:role/terraform.infrastructure
+
+Trusted users:
+* arn:aws:iam::931649473445:user/cicd/terraform.shared.production
+* arn:aws:iam::931649473445:user/cicd/terraform.user.production
+
+##### Preview
+Role Arn:
+* arn:aws:iam::172837312601:role/terraform.infrastructure
+
+Trusted users:
+* arn:aws:iam::931649473445:user/cicd/terraform.shared.preview
+* arn:aws:iam::931649473445:user/cicd/terraform.user.preview
+
+#### Time
+##### Production
+Role Arn:
+* arn:aws:iam::104633789203:role/terraform.infrastructure
+
+Trusted users:
+* arn:aws:iam::931649473445:user/cicd/terraform.shared.production
+* arn:aws:iam::931649473445:user/cicd/terraform.user.production
+* arn:aws:iam::931649473445:user/cicd/terraform.kronos.production
+
+##### Preview
+Role Arn:
+* arn:aws:iam::829991159560:role/terraform.infrastructure
+
+Trusted users:
+* arn:aws:iam::931649473445:user/cicd/terraform.shared.preview
+* arn:aws:iam::931649473445:user/cicd/terraform.user.preview
+* arn:aws:iam::931649473445:user/cicd/terraform.kronos.preview
+
+#### Shared
+##### Production
+Role Arn:
+* arn:aws:iam::556018441473:role/terraform.infrastructure
+
+Trusted users:
+* arn:aws:iam::931649473445:user/cicd/terraform.platform.production
+* arn:aws:iam::931649473445:user/cicd/terraform.shared.production
+* arn:aws:iam::931649473445:user/cicd/terraform.user.production
+* arn:aws:iam::931649473445:user/cicd/terraform.kronos.production
+
+##### Preview
+Role Arn:
+* arn:aws:iam::151170476258:role/terraform.infrastructure
+
+Trusted users:
+* arn:aws:iam::931649473445:user/cicd/terraform.platform.preview
+* arn:aws:iam::931649473445:user/cicd/terraform.shared.preview
+* arn:aws:iam::931649473445:user/cicd/terraform.user.preview
+* arn:aws:iam::931649473445:user/cicd/terraform.kronos.preview
+
+#### Platform
+##### Production
+Role Arn:
+* arn:aws:iam::217292076671:role/terraform.infrastructure
+
+Trusted users:
+* arn:aws:iam::931649473445:user/cicd/terraform.platform.production
+
+##### Preview
+Role Arn:
+* arn:aws:iam::537521289459:role/terraform.infrastructure
+
+Trusted users:
+* arn:aws:iam::931649473445:user/cicd/terraform.platform.preview
+
+#### Networking
+##### Production
+Role Arn:
+* arn:aws:iam::087484524822:role/terraform.infrastructure
+
+Trusted users:
+* arn:aws:iam::931649473445:user/cicd/terraform.platform.production
+
+##### Preview
+Role Arn:
+* arn:aws:iam::365677886296:role/terraform.infrastructure
+
+Trusted users:
+* arn:aws:iam::931649473445:user/cicd/terraform.platform.preview
+
+```json
+{
+	"Version": "2012-10-17",
+	"Statement": [
+		{
+			"Sid": "TerraformNetworkingPreview",
+			"Effect": "Allow",
+			"Principal": { 
+			    "AWS": [
+					"arn:aws:iam::931649473445:user/cicd/terraform.platform.preview"
+				]
+			},
+			"Action": "sts:AssumeRole"
+		}
+	]
+}
+```
