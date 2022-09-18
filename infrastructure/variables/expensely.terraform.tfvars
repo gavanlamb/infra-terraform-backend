@@ -10,40 +10,78 @@ azure_devops_projects_details=[
     project_name = "Platform"
     name = "terraform.platform.production"
     workspace_key_prefix = "platform"
+    assumeRoleUserArns = [
+      "arn:aws:iam::931649473445:role/terraform.infrastructure",
+      "arn:aws:iam::556018441473:role/terraform.infrastructure",
+      "arn:aws:iam::217292076671:role/terraform.infrastructure",
+      "arn:aws:iam::087484524822:role/terraform.infrastructure"
+    ]
   },
   {
     project_name = "Platform"
     name = "terraform.platform.preview"
     workspace_key_prefix= "platform"
+    assumeRoleUserArns = [
+      "arn:aws:iam::151170476258:role/terraform.infrastructure",
+      "arn:aws:iam::537521289459:role/terraform.infrastructure",
+      "arn:aws:iam::931649473445:role/terraform.infrastructure"
+    ]
   },
   {
     project_name = "Kronos"
     name = "terraform.kronos.production"
     workspace_key_prefix= "kronos"
+    assumeRoleUserArns = [
+      "arn:aws:iam::104633789203:role/terraform.infrastructure",
+      "arn:aws:iam::556018441473:role/terraform.infrastructure"
+    ]
   },
   {
     project_name = "Kronos"
     name = "terraform.kronos.preview"
     workspace_key_prefix= "kronos"
+    assumeRoleUserArns = [
+      "arn:aws:iam::829991159560:role/terraform.infrastructure",
+      "arn:aws:iam::151170476258:role/terraform.infrastructure"
+    ]
   },
   {
     project_name = "User"
     name = "terraform.user.production"
     workspace_key_prefix= "user"
+    assumeRoleUserArns = [
+      "arn:aws:iam::104633789203:role/terraform.infrastructure",
+      "arn:aws:iam::556018441473:role/terraform.infrastructure"
+    ]
   },
   {
     project_name = "User"
     name = "terraform.user.preview"
     workspace_key_prefix= "user"
+    assumeRoleUserArns = [
+      "arn:aws:iam::172837312601:role/terraform.infrastructure",
+      "arn:aws:iam::829991159560:role/terraform.infrastructure",
+      "arn:aws:iam::151170476258:role/terraform.infrastructure"
+    ]
   },
   {
     project_name = "Shared"
     name = "terraform.shared.production"
     workspace_key_prefix= "shared"
+    assumeRoleUserArns = [
+      "arn:aws:iam::266556396524:role/terraform.infrastructure",
+      "arn:aws:iam::104633789203:role/terraform.infrastructure",
+      "arn:aws:iam::556018441473:role/terraform.infrastructure"
+    ]
   },
   {
     project_name = "Shared"
     name = "terraform.shared.preview"
     workspace_key_prefix= "shared"
+    assumeRoleUserArns = [
+      "arn:aws:iam::172837312601:role/terraform.infrastructure",
+      "arn:aws:iam::829991159560:role/terraform.infrastructure",
+      "arn:aws:iam::151170476258:role/terraform.infrastructure"
+    ]
   }
 ]
