@@ -14,7 +14,8 @@ azure_devops_projects_details=[
       "arn:aws:iam::931649473445:role/terraform.infrastructure",
       "arn:aws:iam::556018441473:role/terraform.infrastructure",
       "arn:aws:iam::217292076671:role/terraform.infrastructure",
-      "arn:aws:iam::087484524822:role/terraform.infrastructure"
+      "arn:aws:iam::087484524822:role/terraform.infrastructure",
+      "arn:aws:iam::258593516853:role/terraform.infrastructure"
     ]
   },
   {
