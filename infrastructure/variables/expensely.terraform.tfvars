@@ -8,12 +8,10 @@ provider_role_arn="arn:aws:iam::931649473445:role/terraform.infrastructure"
 azure_devops_projects_details=[
   {
     project_name = "Platform"
-    name = "terraform.platform.production"
+    name = "terraform.platform"
     workspace_key_prefix = "platform"
     assumeRoleUserArns = [
       "arn:aws:iam::829991159560:role/terraform.infrastructure",
-      "arn:aws:iam::365677886296:role/terraform.infrastructure",
-      "arn:aws:iam::537521289459:role/terraform.infrastructure",
       "arn:aws:iam::151170476258:role/terraform.infrastructure",
       "arn:aws:iam::172837312601:role/terraform.infrastructure",
       "arn:aws:iam::556018441473:role/terraform.infrastructure",
@@ -22,19 +20,6 @@ azure_devops_projects_details=[
       "arn:aws:iam::266556396524:role/terraform.infrastructure",
       "arn:aws:iam::217292076671:role/terraform.infrastructure",
       "arn:aws:iam::258593516853:role/terraform.infrastructure",
-      "arn:aws:iam::931649473445:role/terraform.infrastructure"
-    ]
-  },
-  {
-    project_name = "Platform"
-    name = "terraform.platform.preview"
-    workspace_key_prefix= "platform"
-    assumeRoleUserArns = [
-      "arn:aws:iam::365677886296:role/terraform.infrastructure",
-      "arn:aws:iam::829991159560:role/terraform.infrastructure",
-      "arn:aws:iam::537521289459:role/terraform.infrastructure",
-      "arn:aws:iam::151170476258:role/terraform.infrastructure",
-      "arn:aws:iam::172837312601:role/terraform.infrastructure",
       "arn:aws:iam::931649473445:role/terraform.infrastructure"
     ]
   },

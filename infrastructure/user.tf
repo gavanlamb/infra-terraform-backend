@@ -4,10 +4,6 @@
   path = "/cicd/"
   force_destroy = true
   tags = local.default_tags
-
-  lifecycle {
-    prevent_destroy = true
-  }
 }
 resource "aws_iam_access_key" "cicd" {
   for_each = {for adad in var.azure_devops_projects_details:  adad.name => adad}
