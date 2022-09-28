@@ -9,6 +9,7 @@ variable "azure_devops_projects_details" {
     project_name = string
     name = string
     workspace_key_prefix = string
+    assumeRoleUserArns = list(string)
   }))
 }
 
