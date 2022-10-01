@@ -24,9 +24,9 @@ azure_devops_projects_details=[
     ]
   },
   {
-    project_name = "Time"
-    name = "terraform.time.production"
-    workspace_key_prefix= "time"
+    project_name = "Kronos"
+    name = "terraform.kronos.production"
+    workspace_key_prefix= "kronos"
     assumeRoleUserArns = [
       "arn:aws:iam::104633789203:role/terraform.infrastructure",
       "arn:aws:iam::556018441473:role/terraform.infrastructure",
@@ -34,9 +34,9 @@ azure_devops_projects_details=[
     ]
   },
   {
-    project_name = "Time"
-    name = "terraform.time.preview"
-    workspace_key_prefix= "time"
+    project_name = "Kronos"
+    name = "terraform.kronos.preview"
+    workspace_key_prefix= "kronos"
     assumeRoleUserArns = [
       "arn:aws:iam::829991159560:role/terraform.infrastructure",
       "arn:aws:iam::151170476258:role/terraform.infrastructure",
