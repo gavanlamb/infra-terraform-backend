@@ -18,11 +18,12 @@ stages:
   - stage: terraform
     displayName: Terraform
     variables:
-      - group: terraform.platform
+      - group: terraform.infra
+      - group: azure-devops
     jobs:
       - template: templates/plan-and-approve.yml
         parameters:
           terraformVariablesFile: variables/expensely.terraform.tfvars
           terraformWorkspace: terraform
           environment: Terraform
-          terraformPlanAdditionalCommandOptions: -var="azure_devops_org_service_url=$(System.CollectionUri)" -var="azure_devops_personal_access_token=$(System.AccessToken)"
+          terraformPlanAdditionalCommandOptions: -var="azure_devops_org_service_url=$(System.CollectionUri)" -var="azure_devops_personal_access_token=$(AZURE_DEVOPS_ACCESS_TOKEN)"

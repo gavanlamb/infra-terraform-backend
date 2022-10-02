@@ -51,7 +51,7 @@ data "azuredevops_project" "platform" {
 }
 resource "azuredevops_variable_group" "terraform" {
   project_id = data.azuredevops_project.platform.id
-  name = "terraform.terraform"
+  name = "terraform.infrastructure"
   description = "Environment variables for Terraform"
   allow_access = true
 
