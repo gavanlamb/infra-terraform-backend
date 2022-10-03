@@ -23,7 +23,7 @@ resource "aws_iam_user_policy_attachment" "terraform_assume_policy" {
   policy_arn = aws_iam_policy.terraform_assume_policy.arn
 }
 resource "aws_iam_policy" "terraform_assume_policy" {
-  name = "terraform.platform.assume_role"
+  name = "terraform.terraform.assume_role"
   policy = data.aws_iam_policy_document.terraform_assume_policy.json
 }
 data "aws_iam_policy_document" "terraform_assume_policy" {
