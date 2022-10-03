@@ -2,7 +2,6 @@ resource "aws_iam_user" "terraform" {
   name = "terraform.infrastructure"
   path = "/cicd/"
   force_destroy = true
-  tags = local.default_tags
 }
 resource "aws_iam_access_key" "terraform" {
   user = aws_iam_user.terraform.name

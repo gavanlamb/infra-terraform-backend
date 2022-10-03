@@ -23,5 +23,4 @@ module "backend" {
   iam_path = var.tf_iam_path
   iam_policy_prefix = var.tf_iam_policy_prefix
   key_name = var.tf_key_name
-  tags = local.default_tags
 }

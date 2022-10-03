@@ -3,6 +3,9 @@
   assume_role {
     role_arn = var.provider_role_arn
   }
+  default_tags {
+    tags = local.default_tags
+  }
 }
 
 provider "azuredevops" {
